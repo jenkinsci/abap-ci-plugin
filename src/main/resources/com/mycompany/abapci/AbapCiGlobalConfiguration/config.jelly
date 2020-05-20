@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?jelly escape-by-default='true'?>
+<j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
+    <f:section title="${%AbapCi Plugin}">
+        <f:entry field="sapServername" title="${%SAP Servername}">
+            <f:textbox/>
+        </f:entry>
+        <f:entry field="sapPort" title="${%Port of SAP Server}">
+            <f:number/>
+        </f:entry>
+        <f:entry field="sapProtocol" title="${%Protocol (http or https)}">
+            <select name="sapProtocol">
+                <option value="http">http</option>
+                <option value="https">https</option>                
+            </select> 
+        </f:entry>
+       
+        <f:entry field="sapMandant" title="${%SAP Testmandant}">
+            <f:number/>
+        </f:entry>
+        <f:entry field="sapUsername" title="${%SAP Username}">
+            <f:textbox/>
+        </f:entry>
+        <f:entry field="sapPassword" title="${%SAP Password}">
+            <f:password/>
+        </f:entry>
+    </f:section>
+</j:jelly>

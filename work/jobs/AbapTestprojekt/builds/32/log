@@ -1,0 +1,11 @@
+Gestartet durch Benutzer unknown or anonymous
+Baue in Arbeitsbereich C:\Users\gautscha\Documents\NetBeansProjects\abapCi\work\jobs\AbapTestprojekt\workspace
+Use jenkins project name as package name: false!
+Start ATC testrun for SAP packagename: $TRUCK_TERMINAL!
+Response statuscode of testrun: 200
+Response content of testrun: <?xml version="1.0" encoding="utf-8"?><aunit:runResult xmlns:aunit="http://www.sap.com/adt/aunit"><alerts/><program adtcore:uri="/sap/bc/adt/oo/classes/zcl_truck_loader" adtcore:type="CLAS/OC" adtcore:name="ZCL_TRUCK_LOADER" adtcore:packageName="$TRUCK_TERMINAL" xmlns:adtcore="http://www.sap.com/adt/core"><alerts/><testClasses><testClass adtcore:uri="/sap/bc/adt/oo/classes/zcl_truck_loader/includes/testclasses#start=19,6" adtcore:type="CLAS/OCN/testclasses" adtcore:name="LTCL_TRUCK_LOADER" adtcore:packageName="$TRUCK_TERMINAL"><alerts/><testMethods><testMethod adtcore:uri="/sap/bc/adt/oo/classes/zcl_truck_loader/includes/testclasses#start=35,9" adtcore:type="CLAS/OCN/testclasses" adtcore:name="LOAD_TRUCK_TEST" adtcore:packageName="$TRUCK_TERMINAL" executionTime="0" unit="s"><alerts><alert kind="failedAssertion" severity="critical"><title>Critical Assertion Error: 'Big Truck - max product size not reached '</title><details><detail text="Expected false"><link rel=""/></detail><detail text="Test 'LTCL_TRUCK_LOADER-&gt;LOAD_TRUCK_TEST' in Main Program 'ZCL_TRUCK_LOADER==============CP'."><link rel=""/></detail></details><stack><stackEntry adtcore:uri="/sap/bc/adt/oo/classes/zcl_truck_loader/includes/testclasses#start=39,0" adtcore:type="CLAS/OCN/testclasses" adtcore:name="ZCL_TRUCK_LOADER" adtcore:packageName="$TRUCK_TERMINAL" adtcore:description="Include: &lt;ZCL_TRUCK_LOADER==============CCAU&gt; Line: &lt;39&gt; (LOAD_TRUCK_TEST)"/></stack></alert></alerts></testMethod></testMethods></testClass></testClasses></program></aunit:runResult>
+Number of failed unittests: 1
+Http Call failed, exception message: null
+Http Call failed, exception stacktrace: [Ljava.lang.StackTraceElement;@6b0f76a4
+Build wurde abgebrochen
+Finished: ABORTED

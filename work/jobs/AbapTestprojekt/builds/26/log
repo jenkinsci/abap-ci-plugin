@@ -1,0 +1,7 @@
+Gestartet durch Benutzer unknown or anonymous
+Baue in Arbeitsbereich C:\Users\gautscha\Documents\NetBeansProjects\abapCi\work\jobs\AbapTestprojekt\workspace
+Use jenkins project name as package name false!
+Start ATC testrun for SAP packagename null!
+Response statuscode of testrun: 200
+Response content of testrun: <?xml version="1.0" encoding="utf-8"?><aunit:runResult xmlns:aunit="http://www.sap.com/adt/aunit"><alerts><alert kind="noTestClasses" severity="tolerable"><title>The task definition does not refer to any test</title><stack/></alert></alerts></aunit:runResult>
+Finished: SUCCESS

@@ -1,0 +1,25 @@
+Manifest-Version: 1.0
+Group-Id: io.jenkins.plugins
+Short-Name: abapCi
+Long-Name: AbapCi Plugin
+Minimum-Java-Version: 1.8
+Plugin-Version: 1.0-SNAPSHOT (private-05/20/2020 22:01-GautschA)
+Hudson-Version: 2.164.3
+Jenkins-Version: 2.164.3
+Plugin-Dependencies: structs:1.20
+Plugin-Developers: 
+Plugin-License-Name: MIT License
+Plugin-License-Url: https://opensource.org/licenses/MIT
+Plugin-ScmUrl: https://github.com/jenkinsci/plugin-pom/abapCi
+Libraries: C:\Users\gautscha\Documents\NetBeansProjects\abapCi\src\mai
+ n\resources,C:\Users\gautscha\Documents\NetBeansProjects\abapCi\targe
+ t\classes,C:\Users\gautscha\.m2\repository\com\google\code\gson\gson\
+ 2.8.6\gson-2.8.6.jar,C:\Users\gautscha\.m2\repository\commons-codec\c
+ ommons-codec\1.11\commons-codec-1.11.jar,C:\Users\gautscha\.m2\reposi
+ tory\org\apache\httpcomponents\httpclient\4.5.10\httpclient-4.5.10.ja
+ r,C:\Users\gautscha\.m2\repository\org\apache\httpcomponents\httpcore
+ \4.4.12\httpcore-4.4.12.jar,C:\Users\gautscha\.m2\repository\org\json
+ \json\20190722\json-20190722.jar
+Resource-Path: C:\Users\gautscha\Documents\NetBeansProjects\abapCi\src
+ \main\webapp
+
