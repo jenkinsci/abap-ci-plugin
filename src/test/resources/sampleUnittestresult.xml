@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?><aunit:runResult xmlns:aunit="http://www.sap.com/adt/aunit">
+    <alerts/>
+    <program adtcore:uri="/sap/bc/adt/oo/classes/zcl_crystal_report_parameter" adtcore:type="CLAS/OC" adtcore:name="ZCL_CRYSTAL_REPORT_PARAMETER" adtcore:packageName="ZHE_CRYSTAL_SERVER" xmlns:adtcore="http://www.sap.com/adt/core">
+        <alerts/>
+        <testClasses>
+            <testClass adtcore:uri="/sap/bc/adt/oo/classes/zcl_crystal_report_parameter/includes/testclasses#start=12,6" adtcore:type="CLAS/OCN/testclasses" adtcore:name="LTCL_CRYSTAL_REPORT_PARAMETER" adtcore:packageName="ZHE_CRYSTAL_SERVER">
+                <alerts/>
+                <testMethods>
+                    <testMethod adtcore:uri="/sap/bc/adt/oo/classes/zcl_crystal_report_parameter/includes/testclasses#start=14,9" adtcore:type="CLAS/OCN/testclasses" adtcore:name="FORMAT_PARAMETER_TEST" adtcore:packageName="ZHE_CRYSTAL_SERVER" executionTime="0" unit="s">
+                        <alerts/>
+                    </testMethod>
+                </testMethods>
+            </testClass>
+        </testClasses>
+    </program>
+    <program adtcore:uri="/sap/bc/adt/oo/classes/zcl_cr_mont_report_uri_builder" adtcore:type="CLAS/OC" adtcore:name="ZCL_CR_MONT_REPORT_URI_BUILDER" adtcore:packageName="ZHE_CRYSTAL_SERVER" xmlns:adtcore="http://www.sap.com/adt/core">
+        <alerts/>
+        <testClasses>
+            <testClass adtcore:uri="/sap/bc/adt/oo/classes/zcl_cr_mont_report_uri_builder/includes/testclasses#start=26,6" adtcore:type="CLAS/OCN/testclasses" adtcore:name="LTCL_CRYSTAL_URI_BUILDER" adtcore:packageName="ZHE_CRYSTAL_SERVER">
+                <alerts/>
+                <testMethods>
+                    <testMethod adtcore:uri="/sap/bc/adt/oo/classes/zcl_cr_mont_report_uri_builder/includes/testclasses#start=41,9" adtcore:type="CLAS/OCN/testclasses" adtcore:name="COMPLETE_URI_TEST" adtcore:packageName="ZHE_CRYSTAL_SERVER" executionTime="0" unit="s">
+                        <alerts/>
+                    </testMethod>
+                    <testMethod adtcore:uri="/sap/bc/adt/oo/classes/zcl_cr_mont_report_uri_builder/includes/testclasses#start=50,9" adtcore:type="CLAS/OCN/testclasses" adtcore:name="STATIC_URL_TEST" adtcore:packageName="ZHE_CRYSTAL_SERVER" executionTime="0" unit="s">
+                        <alerts/>
+                    </testMethod>
+                    <testMethod adtcore:uri="/sap/bc/adt/oo/classes/zcl_cr_mont_report_uri_builder/includes/testclasses#start=69,9" adtcore:type="CLAS/OCN/testclasses" adtcore:name="URI_BASE_TEST" adtcore:packageName="ZHE_CRYSTAL_SERVER" executionTime="0" unit="s">
+                        <alerts/>
+                    </testMethod>
+                    <testMethod adtcore:uri="/sap/bc/adt/oo/classes/zcl_cr_mont_report_uri_builder/includes/testclasses#start=62,9" adtcore:type="CLAS/OCN/testclasses" adtcore:name="URI_COMPLETE_QUERY_TEST" adtcore:packageName="ZHE_CRYSTAL_SERVER" executionTime="0" unit="s">
+                        <alerts/>
+                    </testMethod>
+                    <testMethod adtcore:uri="/sap/bc/adt/oo/classes/zcl_cr_mont_report_uri_builder/includes/testclasses#start=57,9" adtcore:type="CLAS/OCN/testclasses" adtcore:name="URI_QUERY_TEST" adtcore:packageName="ZHE_CRYSTAL_SERVER" executionTime="0" unit="s">
+                        <alerts/>
+                    </testMethod>
+                </testMethods>
+            </testClass>
+        </testClasses>
+    </program>
+</aunit:runResult>

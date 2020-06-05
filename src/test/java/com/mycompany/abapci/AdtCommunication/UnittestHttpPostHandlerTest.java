@@ -23,38 +23,26 @@
  */
 package com.mycompany.abapci.AdtCommunication;
 
+import java.io.IOException;
+import org.junit.Assert;
+import org.junit.Test;
+
 /**
  *
  * @author Andreas Gautsch
  */
-public class SapServerInfo {
+public class UnittestHttpPostHandlerTest {
 
-    private final String _protocol;
-    private final String _sapServer;
-    private final int _port;
-    private final String _mandant;
+ 
+    @Test
+    public void SimpleTest() throws IOException {
+       
+        SapConnectionInfo sapConnectionInfo = null; 
+        UnittestHttpPostHandler  httpPostHandler  = new UnittestHttpPostHandler(sapConnectionInfo, "SAP_TEST_PACKAGE", null); 
+        String postMessage = httpPostHandler.GetPostMessage(); 
+        Assert.assertNotNull(postMessage);
+        Assert.assertTrue(postMessage.contains("/sap/bc/adt/vit/wb/object_type/devck/object_name/SAP_TEST_PACKAGE"));  
 
-    public SapServerInfo(String protocol, String sapServer, int port, String mandant)
-    {
-        _protocol = protocol; 
-        _sapServer = sapServer; 
-        _port = port; 
-        _mandant = mandant; 
     }
-    String GetProtocol() {
-        return _protocol; 
-    }
-
-    String GetSapServer() {
-        return _sapServer; 
-    }
-
-    int GetSapPort() {
-        return _port; 
-    }
-
-    String GetMandant() {
-        return _mandant; 
-    }
-    
 }
+ 

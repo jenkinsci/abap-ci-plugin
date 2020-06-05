@@ -6,4 +6,6 @@
   <sapMandant>363</sapMandant>
   <sapUsername>sap-test</sapUsername>
   <sapPassword>hellatest</sapPassword>
+  <runUnitTests>true</runUnitTests>
+  <runAtcChecks>true</runAtcChecks>
 </com.mycompany.abapci.AbapCiGlobalConfiguration>

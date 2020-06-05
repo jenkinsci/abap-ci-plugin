@@ -29,7 +29,7 @@ package com.mycompany.abapci.util;
  */
 public class IntegerValidator {
     
-    public static boolean IsInteger(String value) {  
+    public static boolean isInteger(String value) {  
      try {  
          Integer.parseInt(value);  
          return true;  

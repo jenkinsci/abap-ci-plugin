@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?><aunit:runResult xmlns:aunit="http://www.sap.com/adt/aunit">
+    <alerts/>
+    <program adtcore:uri="/sap/bc/adt/oo/classes/zcl_recommender_service" adtcore:type="CLAS/OC" adtcore:name="ZCL_RECOMMENDER_SERVICE" adtcore:packageName="$TESTPACKAGE" xmlns:adtcore="http://www.sap.com/adt/core">
+        <alerts/>
+        <testClasses>
+            <testClass adtcore:uri="/sap/bc/adt/oo/classes/zcl_recommender_service/includes/testclasses#start=12,6" adtcore:type="CLAS/OCN/testclasses" adtcore:name="LTCL_" adtcore:packageName="$TESTPACKAGE">
+                <alerts/>
+                <testMethods>
+                    <testMethod adtcore:uri="/sap/bc/adt/oo/classes/zcl_recommender_service/includes/testclasses#start=20,9" adtcore:type="CLAS/OCN/testclasses" adtcore:name="PRODUCT_COUCH_TEST" adtcore:packageName="$TESTPACKAGE" executionTime="0" unit="s">
+                        <alerts>
+                            <alert kind="failedAssertion" severity="critical">
+                                <title>Critical Assertion Error: 'Check additional product'</title>
+                                <details>
+                                    <detail text="Different Values:">
+                                        <link rel=""/>
+                                        <details>
+                                            <detail text="Expected [Pillow] Actual []">
+                                                <link rel=""/>
+                                            </detail>
+                                        </details>
+                                    </detail>
+                                    <detail text="Test 'LTCL_-&gt;PRODUCT_COUCH_TEST' in Main Program 'ZCL_RECOMMENDER_SERVICE=======CP'.">
+                                        <link rel=""/>
+                                    </detail>
+                                </details>
+                                <stack>
+                                    <stackEntry adtcore:uri="/sap/bc/adt/oo/classes/zcl_recommender_service/includes/testclasses#start=23,0" adtcore:type="CLAS/OCN/testclasses" adtcore:name="ZCL_RECOMMENDER_SERVICE" adtcore:packageName="$TESTPACKAGE" adtcore:description="Include: &lt;ZCL_RECOMMENDER_SERVICE=======CCAU&gt; Line: &lt;23&gt; (PRODUCT_COUCH_TEST)"/>
+                                </stack>
+                            </alert>
+                        </alerts>
+                    </testMethod>
+                    <testMethod adtcore:uri="/sap/bc/adt/oo/classes/zcl_recommender_service/includes/testclasses#start=14,9" adtcore:type="CLAS/OCN/testclasses" adtcore:name="PRODUCT_TABLE_TEST" adtcore:packageName="$TESTPACKAGE" executionTime="0" unit="s">
+                        <alerts/>
+                    </testMethod>
+                </testMethods>
+            </testClass>
+        </testClasses>
+    </program>
+</aunit:runResult>

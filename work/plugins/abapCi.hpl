@@ -3,7 +3,7 @@ Group-Id: io.jenkins.plugins
 Short-Name: abapCi
 Long-Name: AbapCi Plugin
 Minimum-Java-Version: 1.8
-Plugin-Version: 1.0-SNAPSHOT (private-05/20/2020 22:01-GautschA)
+Plugin-Version: 1.0-SNAPSHOT (private-05/28/2020 16:09-GautschA)
 Hudson-Version: 2.164.3
 Jenkins-Version: 2.164.3
 Plugin-Dependencies: structs:1.20

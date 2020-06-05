@@ -15,7 +15,7 @@ public class HelloWorldBuilderTest {
     @Rule
     public JenkinsRule jenkins = new JenkinsRule();
 
-    final String name = "Bobby";
+    final String name = "TESTPROJECT";
 
     @Test
     public void testConfigRoundtrip() throws Exception {
@@ -25,20 +25,7 @@ public class HelloWorldBuilderTest {
         jenkins.assertEqualDataBoundBeans(new AbapCiBuilder(name), project.getBuildersList().get(0));
     }
 
-    @Test
-    public void testConfigRoundtripFrench() throws Exception {
-        FreeStyleProject project = jenkins.createFreeStyleProject();
-        AbapCiBuilder builder = new AbapCiBuilder(name);
-        builder.setuseJenkinsProjectName(true);
-        project.getBuildersList().add(builder);
-        project = jenkins.configRoundtrip(project);
 
-        AbapCiBuilder lhs = new AbapCiBuilder(name);
-        lhs.setuseJenkinsProjectName(true);
-        jenkins.assertEqualDataBoundBeans(lhs, project.getBuildersList().get(0));
-    }
-
-    @Test
     public void testBuild() throws Exception {
         FreeStyleProject project = jenkins.createFreeStyleProject();
         AbapCiBuilder builder = new AbapCiBuilder(name);
@@ -48,26 +35,13 @@ public class HelloWorldBuilderTest {
         jenkins.assertLogContains("Hello, " + name, build);
     }
 
-    @Test
-    public void testBuildFrench() throws Exception {
-
-        FreeStyleProject project = jenkins.createFreeStyleProject();
-        AbapCiBuilder builder = new AbapCiBuilder(name);
-        builder.setuseJenkinsProjectName(true);
-        project.getBuildersList().add(builder);
-
-        FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
-        jenkins.assertLogContains("Bonjour, " + name, build);
-    }
-
-    @Test
     public void testScriptedPipeline() throws Exception {
         String agentLabel = "my-agent";
         jenkins.createOnlineSlave(Label.get(agentLabel));
         WorkflowJob job = jenkins.createProject(WorkflowJob.class, "test-scripted-pipeline");
         String pipelineScript
                 = "node {\n"
-                + "  greet '" + name + "'\n"
+                + "  abapCi '" + name + "'\n"
                 + "}";
         job.setDefinition(new CpsFlowDefinition(pipelineScript, true));
         WorkflowRun completedBuild = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));

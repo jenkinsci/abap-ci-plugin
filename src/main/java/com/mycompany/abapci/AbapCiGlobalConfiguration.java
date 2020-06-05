@@ -24,7 +24,7 @@ public class AbapCiGlobalConfiguration extends GlobalConfiguration {
     private String sapServername;
     private int sapPort;
     private String sapProtocol;
-    private int sapMandant;
+    private String sapMandant;
     private String sapUsername;
     private String sapPassword;
 
@@ -65,7 +65,7 @@ public class AbapCiGlobalConfiguration extends GlobalConfiguration {
         if (StringUtils.isEmpty(value)) {
             return FormValidation.warning("Please specify the used port to connect to the SAP system.");
         }
-        if (!IntegerValidator.IsInteger(value)) {
+        if (!IntegerValidator.isInteger(value)) {
             return FormValidation.warning("As SAP port only an integer is allowed");
         }
 
@@ -95,12 +95,12 @@ public class AbapCiGlobalConfiguration extends GlobalConfiguration {
 
     }
 
-    public int getSapMandant() {
+    public String getSapMandant() {
         return sapMandant;
     }
 
     @DataBoundSetter
-    public void setSapMandant(int mandant) {
+    public void setSapMandant(String mandant) {
         this.sapMandant = mandant;
         save();
     }
@@ -110,7 +110,7 @@ public class AbapCiGlobalConfiguration extends GlobalConfiguration {
             return FormValidation.warning("Please specify the SAP Client where the tests should be run.");
         }
 
-        if (!IntegerValidator.IsInteger(value)) {
+        if (!IntegerValidator.isInteger(value)) {
             return FormValidation.warning("Only an integer is allowed as client number.");
         }
 

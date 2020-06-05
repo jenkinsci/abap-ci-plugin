@@ -23,7 +23,10 @@
  */
 package com.mycompany.resultParser;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -45,48 +48,67 @@ public class JsonParserTest {
                 + "</aunit:runResult>";
 
         UnittestResultParser jsonParser = new UnittestResultParser();
-        int failedUnittests = jsonParser.parseXmlForFailedUnittests(testresult);
+        int failedUnittests = jsonParser.parseXmlForFailedElements(testresult);
         Assert.assertEquals(0, failedUnittests);
 
     }
 
     @Test
-    public void SimpleUnittestresultFailedTest() throws IOException {
-        String testresult = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-                + "<aunit:runResult xmlns:aunit=\"http://www.sap.com/adt/aunit\">"
-                + "<alerts/>"
-                + "<program adtcore:uri=\"/sap/bc/adt/oo/classes/zcl_truck_loader\" adtcore:type=\"CLAS/OC\">"
-                + "<alerts/>"
-                + " <testClasses>"
-                + "<testClass adtcore:uri=\"/sap/bc/adt/oo/classes/zcl_truck_loader/includes/testclasses#start=19,6\">"
-                + "<alerts/>"
-                + "<testMethods>"
-                + "<testMethod adtcore:uri=\"/sap/bc/adt/oo/classes/zcl_truck_loader/includes/testclasses#start=35,9\" >"
-                + "<alerts>"
-                + "<alert kind=\"failedAssertion\" severity=\"critical\">"
-                + "<title>"
-                + "Critical Assertion Error: 'Big Truck - max product size not reached '</title><details><detail text=\"Expected false\">"
-                + "<link rel=\"\"/>"
-                + "</detail>"
-                + "<detail text=\"Test 'LTCL_TRUCK_LOADER-&gt;LOAD_TRUCK_TEST' in Main Program 'ZCL_TRUCK_LOADER==============CP'.\">"
-                + "<link rel=\"\"/>"
-                + "</detail>"
-                + "</details>"
-                + "<stack>"
-                + "<stackEntry adtcore:uri=\"/sap/bc/adt/oo/classes/zcl_truck_loader/includes/testclasses#start=39,0\"/>"
-                + "</stack>"
-                + "</alert>"
-                + "</alerts>"
-                + "</testMethod>"
-                + "</testMethods>"
-                + "</testClass>"
-                + "</testClasses>"
-                + "</program>"
-                + "</aunit:runResult>";
+    public void SimpleTestReadFile() throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("sampleUnittestresult.xml").getFile());
+        String str = FileUtils.readFileToString(file, "utf-8");
 
         UnittestResultParser jsonParser = new UnittestResultParser();
-        int failedUnittests = jsonParser.parseXmlForFailedUnittests(testresult);
-        Assert.assertEquals(1, failedUnittests);
+        int failedUnittests = jsonParser.parseXmlForFailedElements(str);
+        Assert.assertEquals(0, failedUnittests);
 
     }
+
+    @Test
+    public void SimpleTestAtcResultWithErrors() throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("sampleAtcResult.xml").getFile());
+        String str = FileUtils.readFileToString(file, "utf-8");
+
+        AtcCheckResultParser jsonParser = new AtcCheckResultParser();
+        int failedAtcChecks = jsonParser.parseXmlForFailedElements(str);
+        Assert.assertEquals(1, failedAtcChecks);
+    }
+
+    @Test
+    public void SimpleAtcResultWithAtcToolFailuresTest() throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("sampleAtcResultWithAtcToolFailures.xml").getFile());
+        String str = FileUtils.readFileToString(file, "utf-8");
+
+        AtcCheckResultParser jsonParser = new AtcCheckResultParser();
+        int failedAtcChecks = jsonParser.parseXmlForFailedElements(str);
+        Assert.assertEquals(82, failedAtcChecks);
+
+    }
+
+
+    @Test
+    public void SimpleTestUnittestResultNoTests() throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("unittestResultNoTests.xml").getFile());
+        String str = FileUtils.readFileToString(file, "utf-8");
+
+        UnittestResultParser jsonParser = new UnittestResultParser();
+        int failedUnittests = jsonParser.parseXmlForFailedElements(str);
+        Assert.assertEquals(0, failedUnittests);
+    }
+
+        @Test
+    public void SimpleTestUnittestResultWithFailure() throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("unittestResultWithFailure.xml").getFile());
+        String str = FileUtils.readFileToString(file, "utf-8");
+
+        UnittestResultParser jsonParser = new UnittestResultParser();
+        int failedUnittests = jsonParser.parseXmlForFailedElements(str);
+        Assert.assertEquals(1, failedUnittests);
+    }
+
 }

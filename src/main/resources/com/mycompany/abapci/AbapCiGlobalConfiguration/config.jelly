@@ -16,7 +16,7 @@
         </f:entry>
        
         <f:entry field="sapMandant" title="${%SAP Testmandant}">
-            <f:number/>
+            <f:textbox/>
         </f:entry>
         <f:entry field="sapUsername" title="${%SAP Username}">
             <f:textbox/>
@@ -24,5 +24,6 @@
         <f:entry field="sapPassword" title="${%SAP Password}">
             <f:password/>
         </f:entry>
+
     </f:section>
 </j:jelly>

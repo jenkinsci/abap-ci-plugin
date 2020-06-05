@@ -3,6 +3,7 @@ package com.mycompany.abapci;
 
 
 import com.gargoylesoftware.htmlunit.html.HtmlForm;
+import com.gargoylesoftware.htmlunit.html.HtmlNumberInput;
 import com.gargoylesoftware.htmlunit.html.HtmlTextInput;
 import org.junit.Assert;
 import org.junit.Test;
@@ -50,7 +51,7 @@ public class AbapCiGlobalConfigurationTest {
             rr.then(r -> {
             Assert.assertEquals(0, AbapCiGlobalConfiguration.get().getSapPort());
             HtmlForm config = r.createWebClient().goTo("configure").getFormByName("config");
-            HtmlTextInput textbox = config.getInputByName("_.sapPort");
+            HtmlNumberInput textbox = config.getInputByName("_.sapPort");
             textbox.setText(Integer.toString(testValue));
             r.submit(config);
             assertEquals("global config page let us edit it", testValue, AbapCiGlobalConfiguration.get().getSapPort());
