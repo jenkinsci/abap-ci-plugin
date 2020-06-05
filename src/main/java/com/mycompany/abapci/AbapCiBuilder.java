@@ -172,7 +172,7 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
         public FormValidation doCheckName(@QueryParameter String value)
                 throws IOException, ServletException {
             if (value.length() == 0) {
-                return FormValidation.error(Messages.HelloWorldBuilder_DescriptorImpl_errors_missingPackageName());
+                return FormValidation.error("Please set a package name");
             }
 
             return FormValidation.ok();
@@ -185,7 +185,7 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 
         @Override
         public String getDisplayName() {
-            return Messages.HelloWorldBuilder_DescriptorImpl_DisplayName();
+            return "ABAP Continuous Integration Plugin";
         }
 
     }
