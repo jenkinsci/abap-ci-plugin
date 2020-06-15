@@ -96,7 +96,7 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
             listener.getLogger().println("Use jenkins project name as package name: " + useJenkinsProjectname + "!");
 
             String username = globalConfiguration.getSapUsername();
-            String password = globalConfiguration.getSapPassword();
+            String password = globalConfiguration.getSapPassword().getPlainText();
             SapCredentials sapCredentials = new SapCredentials(username, password);
             SapServerInfo sapServerInfo = new SapServerInfo(
                     globalConfiguration.getSapProtocol(),

@@ -3,6 +3,7 @@ package com.mycompany.abapci;
 import com.mycompany.abapci.util.IntegerValidator;
 import hudson.Extension;
 import hudson.util.FormValidation;
+import hudson.util.Secret;
 import jenkins.model.GlobalConfiguration;
 import org.apache.commons.lang.StringUtils;
 import org.kohsuke.stapler.DataBoundSetter;
@@ -26,7 +27,7 @@ public class AbapCiGlobalConfiguration extends GlobalConfiguration {
     private String sapProtocol;
     private String sapMandant;
     private String sapUsername;
-    private String sapPassword;
+    private Secret sapPassword;
 
     public AbapCiGlobalConfiguration() {
         load();
@@ -136,12 +137,12 @@ public class AbapCiGlobalConfiguration extends GlobalConfiguration {
         return FormValidation.ok();
     }
 
-    public String getSapPassword() {
+    public Secret getSapPassword() {
         return sapPassword;
     }
 
     @DataBoundSetter
-    public void setSapPassword(String password) {
+    public void setSapPassword(Secret password) {
         this.sapPassword = password;
         save();
     }
