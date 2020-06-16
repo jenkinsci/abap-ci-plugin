@@ -18,6 +18,7 @@ import hudson.model.Run;
 import hudson.model.TaskListener;
 import hudson.tasks.Builder;
 import hudson.tasks.BuildStepDescriptor;
+import hudson.util.Secret;
 import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.QueryParameter;
 
@@ -96,7 +97,7 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
             listener.getLogger().println("Use jenkins project name as package name: " + useJenkinsProjectname + "!");
 
             String username = globalConfiguration.getSapUsername();
-            String password = globalConfiguration.getSapPassword().getPlainText();
+            Secret password = globalConfiguration.getSapPassword();
             SapCredentials sapCredentials = new SapCredentials(username, password);
             SapServerInfo sapServerInfo = new SapServerInfo(
                     globalConfiguration.getSapProtocol(),

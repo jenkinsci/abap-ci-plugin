@@ -97,7 +97,7 @@ public abstract class AHttpPostHandler implements IHttpPostHandler {
     }
 
     private String EncodeCredentials() throws UnsupportedEncodingException {
-        return Base64.getEncoder().encodeToString((_sapConnectionInfo.GetSapCredentials().GetUsername() + ":" + _sapConnectionInfo.GetSapCredentials().GetPassword()).getBytes("UTF-8"));
+        return Base64.getEncoder().encodeToString((_sapConnectionInfo.GetSapCredentials().GetUsername() + ":" + _sapConnectionInfo.GetSapCredentials().GetPassword().getPlainText()).getBytes("UTF-8"));
     }
 
     protected String BuildHttpUrl(String path) {

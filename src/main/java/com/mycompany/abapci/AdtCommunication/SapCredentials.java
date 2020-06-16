@@ -23,6 +23,8 @@
  */
 package com.mycompany.abapci.AdtCommunication;
 
+import hudson.util.Secret;
+
 /**
  *
  * @author Andreas Gautsch
@@ -30,9 +32,9 @@ package com.mycompany.abapci.AdtCommunication;
 public class SapCredentials {
 
     private final String _username;
-    private final String _password;
+    private final Secret _password;
 
-    public SapCredentials(String username, String password) {
+    public SapCredentials(String username, Secret password) {
         _username = username;
         _password = password;
     }
@@ -42,7 +44,7 @@ public class SapCredentials {
     }
 
 
-    String GetPassword() {
+    Secret GetPassword() {
         return _password;
     }
 
