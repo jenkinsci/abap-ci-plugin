@@ -142,7 +142,8 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
                         listener.getLogger().println("Number of failed ATC checks: " + numCriticalAtcChecks);
                     }
                 }
-
+            } catch (RuntimeException rex) {
+                throw rex;  
             } catch (Exception e) {
                 StringWriter sw = new StringWriter();
                 e.printStackTrace(new PrintWriter(sw));
