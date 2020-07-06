@@ -9,7 +9,7 @@
     </parent>
     <groupId>io.jenkins.plugins</groupId>
     <artifactId>abap-ci</artifactId>
-    <version>1.1-snapshot</version>
+    <version>1.1</version>
     <packaging>hpi</packaging>
     <properties>
         <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
@@ -126,6 +126,6 @@
     </pluginRepositories>
 
   <scm>
-    <tag>abap-ci-1.0</tag>
+    <tag>abap-ci-1.1</tag>
   </scm>
 </project>
