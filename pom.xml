@@ -105,12 +105,15 @@
   
     <url>https://github.com/jenkinsci/abap-ci-plugin</url>
      <scm>
-        <connection>scm:git:git://github.com/jenkinsci/abap-ci-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com/jenkinsci/abap-ci-plugin.git</developerConnection>
+        <connection>scm:git:ssh://github.com/jenkinsci/abap-ci-plugin.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/jenkinsci/abap-ci-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/abap-ci-plugin</url>
         <tag>abap-ci-1.4</tag>
     </scm>
     
+</scm>
+
+
     <repositories>
         <repository>
             <id>repo.jenkins-ci.org</id>
