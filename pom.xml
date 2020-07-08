@@ -108,7 +108,7 @@
         <connection>scm:git:git://github.com/jenkinsci/abap-ci-plugin.git</connection>
         <developerConnection>scm:git:git@github.com/jenkinsci/abap-ci-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/abap-ci-plugin</url>
-        <tag>abap-ci-1.3</tag>
+        <tag>abap-ci-1.4</tag>
     </scm>
     
     <repositories>
