@@ -124,4 +124,29 @@
         </pluginRepository>
     </pluginRepositories>
 
+<build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.1.1</version>
+            </plugin>
+            <plugin>
+                <groupId>org.jenkins-ci.tools</groupId>
+                <artifactId>maven-hpi-plugin</artifactId>
+                <configuration>
+                    <minimumJavaVersion>1.8</minimumJavaVersion>
+                    <loggers>
+                        <org.jenkinsci.plugins.workflow.multibranch>FINE</org.jenkinsci.plugins.workflow.multibranch>
+                    </loggers>
+                </configuration>
+                <version>3.14</version>
+            </plugin>
+            <plugin>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>3.1.11</version>
+            </plugin>
+        </plugins>
+    </build>
 </project>
