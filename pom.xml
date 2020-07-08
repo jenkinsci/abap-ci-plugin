@@ -9,7 +9,7 @@
     </parent>
     <groupId>io.jenkins.plugins</groupId>
     <artifactId>abap-ci</artifactId>
-    <version>1.2</version>
+    <version>1.2-SNAPSHOT</version>
     <packaging>hpi</packaging>
     <properties>
         <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
@@ -95,22 +95,22 @@
 
     </dependencies>
 
-    <!-- If you want this to appear on the wiki page:
     <developers>
       <developer>
-        <id>bhacker</id>
-        <name>Bob Q. Hacker</name>
-        <email>bhacker@nowhere.net</email>
+        <id>andau</id>
+        <name>Andreas Gautsch</name>
+        <email>not shown</email>
       </developer>
-    </developers> -->
-
+    </developers>
+  
     <url>https://github.com/jenkinsci/abap-ci-plugin</url>
-    <scm>
-        <connection>scm:git:git://github.com/jenkinsci/abap-ci-plugin.git</connection>
-        <developerConnection>scm:git:git@github.com:jenkinsci/abap-ci-plugin.git</developerConnection>
+     <scm>
+        <connection>scm:git:ssh://git@github.com/jenkinsci/abap-ci-plugin.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/jenkinsci/abap-ci-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/abap-ci-plugin</url>
-    <tag>abap-ci-1.2</tag>
+        <tag>HEAD</tag>
     </scm>
+
     <repositories>
         <repository>
             <id>repo.jenkins-ci.org</id>

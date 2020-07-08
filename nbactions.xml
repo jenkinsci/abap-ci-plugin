@@ -4,8 +4,8 @@
             <actionName>CUSTOM-release</actionName>
             <displayName>release</displayName>
             <goals>
-                <goal>release:prepare</goal>
-                <goal>release:perform</goal>
+                <goal>-X release:prepare</goal>
+                <goal>-X release:perform</goal>
             </goals>
         </action>
     </actions>
