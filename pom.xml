@@ -9,7 +9,7 @@
     </parent>
     <groupId>io.jenkins.plugins</groupId>
     <artifactId>abap-ci</artifactId>
-    <version>1.13-SNAPSHOT</version>
+    <version>1.13</version>
     <packaging>hpi</packaging>
     <properties>
         <!-- Baseline Jenkins version you use to build the plugin. Users must have this version or newer to run. -->
@@ -107,7 +107,7 @@
         <connection>scm:git:git://github.com/jenkinsci/abap-ci-plugin.git</connection>
         <developerConnection>scm:git:git://git@github.com:jenkinsci/abap-ci-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/abap-ci-plugin</url>
-        <tag>abap-ci-1.12</tag>
+        <tag>abap-ci-1.13</tag>
     </scm>
         
     <url>https://github.com/jenkinsci/abap-ci-plugin</url>
