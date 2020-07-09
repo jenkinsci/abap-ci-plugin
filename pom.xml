@@ -109,6 +109,10 @@
         <url>https://github.com/jenkinsci/abap-ci-plugin</url>
         <tag>abap-ci-1.8</tag>
     </scm>
+        
+    <url>https://github.com/jenkinsci/abap-ci-plugin</url>
+    
+   
     
 
 
