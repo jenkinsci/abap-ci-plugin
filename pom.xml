@@ -104,7 +104,7 @@
     </developers>
   
      <scm>
-        <connection>scm:git:git://github.com/jenkinsci/abap-ci-plugin.git</connection>
+        <connection>scm:git:https://github.com/jenkinsci/abap-ci-plugin.git</connection>
         <developerConnection>scm:git:git://git@github.com:jenkinsci/abap-ci-plugin.git</developerConnection>
         <url>https://github.com/jenkinsci/abap-ci-plugin</url>
         <tag>abap-ci-1.5</tag>
