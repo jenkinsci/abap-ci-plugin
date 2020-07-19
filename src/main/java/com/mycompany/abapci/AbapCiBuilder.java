@@ -36,23 +36,23 @@ import org.kohsuke.stapler.DataBoundSetter;
 
 public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 
-    private String sapPackagename;
+    private String abapPackagename;
     private boolean useJenkinsProjectname;
     private boolean runUnitTests;
     private boolean runAtcChecks;
 
     @DataBoundConstructor
-    public AbapCiBuilder(String sapPackagename) {
-        this.sapPackagename = sapPackagename;
+    public AbapCiBuilder(String abapPackagename) {
+        this.abapPackagename = abapPackagename;
     }
 
-    public String getSapPackagename() {
-        return sapPackagename;
+    public String getAbapPackagename() {
+        return abapPackagename;
     }
 
     @DataBoundSetter
-    public void setSapPackagename(String sapPackagename) {
-        this.sapPackagename = sapPackagename;
+    public void setAbapPackagename(String sapPackagename) {
+        this.abapPackagename = sapPackagename;
     }
 
     public boolean getUseJenkinsProjectName() {
@@ -110,9 +110,9 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
                 
                 listener.getLogger().println("Run Unit Test flag is: " + isRunUnitTests());
                 if (isRunUnitTests()) {
-                    listener.getLogger().println("Start ABAP Unit testrun for SAP packagename: " + sapPackagename + "!");
+                    listener.getLogger().println("Start ABAP Unit testrun for SAP packagename: " + abapPackagename + "!");
 
-                    IHttpPostHandler httpPostHandler = new UnittestHttpPostHandler(sapConnectionInfo, sapPackagename, listener);
+                    IHttpPostHandler httpPostHandler = new UnittestHttpPostHandler(sapConnectionInfo, abapPackagename, listener);
                     HttpResponse response = httpPostHandler.executeWithToken();
                     listener.getLogger().println("Response statuscode of unit testrun: " + response.getStatusLine().getStatusCode());
 
@@ -128,9 +128,9 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 
                 listener.getLogger().println("Run ATC checks flag is: " + isRunAtcChecks());
                 if (isRunAtcChecks()) {
-                    listener.getLogger().println("Start ATC checkrun for SAP packagename: " + sapPackagename + "!");
+                    listener.getLogger().println("Start ATC checkrun for SAP packagename: " + abapPackagename + "!");
 
-                    IHttpPostHandler httpPostHandlerAtc = new AtcHttpPostHandler(sapConnectionInfo, sapPackagename, listener);
+                    IHttpPostHandler httpPostHandlerAtc = new AtcHttpPostHandler(sapConnectionInfo, abapPackagename, listener);
                     HttpResponse atcResponse = httpPostHandlerAtc.executeWithToken();
                     listener.getLogger().println("Response statuscode of atc run: " + atcResponse.getStatusLine().getStatusCode());
 
