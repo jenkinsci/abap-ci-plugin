@@ -41,7 +41,11 @@ The following parameters have to be specified:
 *Sample configuration to an ABAP development system instance - Jenkins and ABAP system running in the AWS cloud* 
  
 ## Free-style project: 
+If you choose to integrate the plugin into a freestyle-project you can do this by using the plugin within a build step. 
+Simply add the AbapCi Plugin as build step and specify the ABAP package and the features you want to perform on the configured package. 
+
 ![Free-style project](documentation/freestyle_project.PNG/?raw=true "Free-style project")
+*Sample free-style project for the ABAP package $TMP - on each run ATC checks and Unit tests will be performed*  
 
  
 ## Pipeline project: 
