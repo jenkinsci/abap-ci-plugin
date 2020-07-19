@@ -26,9 +26,17 @@ Currently there are two Continuous Integration features supported:
 The plugin can be used as a build step in a free-style project or also within a pipeline project. 
 
 ## Global configuration   
+In the Jenkins global configurations the connection info for the ABAP development system has to be set. In the below example this is shown for an test instance on an AWS account. 
+The following parameters have to be specified: 
+- SAP Servername: The name of the SAP server - the   
+- Port of SAP Server: The used port - in the most cases this should be the standard port 8000 
+- Protocol: here you have to specifiy if http or https is used 
+- SAP Testmandant: the client number of the ABAP system  
+- SAP Username: the username to connect to the ABAP development system 
+- SAP Password: the password to connect to the ABAP development system 
 
 ![Global Jenkins Configuration](documentation/abap_ci_global_configuration.PNG/?raw=true "Global Jenkins Configuration")
- 
+*Sample configuration to an ABAP development system instance - Jenkins and ABAP system running in the AWS cloud* 
  
 ## Free-style project: 
 ![Free-style project](documentation/freestyle_project.PNG/?raw=true "Free-style project")
