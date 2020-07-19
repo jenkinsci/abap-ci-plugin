@@ -36,7 +36,7 @@ The following parameters have to be specified:
 - Username: the username of the SAP user to connect to the ABAP development system 
 - Password: the password of the SAP password to connect to the ABAP development system 
 
-![Global Jenkins Configuration](documentation/abap_ci_global_configuration1.PNG/?raw=true "Global Jenkins Configuration")
+![Global Jenkins Configuration](documentation/abap_ci_global_configuration1.PNG.png/?raw=true "Global Jenkins Configuration")
 *Sample configuration to an ABAP development system instance - Jenkins and ABAP system running in the AWS cloud* 
  
 ## Free-style project: 
