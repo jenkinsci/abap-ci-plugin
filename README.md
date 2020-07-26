@@ -45,6 +45,7 @@ If you choose to integrate the plugin into a freestyle-project you can do this b
 Simply add the AbapCi Plugin as build step and specify the ABAP package and the features you want to perform on the configured package. 
 
 ![Free-style project](documentation/freestyle_project.PNG/?raw=true "Free-style project")
+
 *Sample free-style project for the ABAP package $TMP - on each run ATC checks and Unit tests will be performed*  
 
  
@@ -58,10 +59,12 @@ The notation to call the plugin is:
 A great help to get the right notation is to use the `Pipeline Syntax` button which is located directly below the pipeline script box.  
 
 ![Pipeline project definition](documentation/pipeline_project1.png/?raw=true "Pipeline project definition")
-Sample pipleline project for the ABAP package $TMP - on each run ATC checks and Unit tests will be performed
+
+*Sample pipeline project for the ABAP package $TMP - on each run ATC checks and Unit tests will be performed
 
 Below you can see a sample output of a Jenkins pipeline for the above configured ABAP package. 
 ![Pipeline project output](documentation/Pipeline_output.png/?raw=true "Pipeline_output.png")
- 
+
+*Sample pipeline output for the ABAP package $TMP
 
  
