@@ -60,11 +60,11 @@ A great help to get the right notation is to use the `Pipeline Syntax` button wh
 
 ![Pipeline project definition](documentation/pipeline_project1.png/?raw=true "Pipeline project definition")
 
-*Sample pipeline project for the ABAP package $TMP - on each run ATC checks and Unit tests will be performed
+*Sample pipeline project for the ABAP package $TMP - on each run ATC checks and Unit tests will be performed*
 
 Below you can see a sample output of a Jenkins pipeline for the above configured ABAP package. 
 ![Pipeline project output](documentation/Pipeline_output.png/?raw=true "Pipeline_output.png")
 
-*Sample pipeline output for the ABAP package $TMP
+*Sample pipeline output for the ABAP package $TMP*
 
  
