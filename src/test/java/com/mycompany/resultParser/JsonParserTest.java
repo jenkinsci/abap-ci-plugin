@@ -25,7 +25,7 @@ package com.mycompany.resultParser;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
+
 import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -48,7 +48,7 @@ public class JsonParserTest {
                 + "</aunit:runResult>";
 
         UnittestResultParser jsonParser = new UnittestResultParser();
-        int failedUnittests = jsonParser.parseXmlForFailedElements(testresult);
+        int failedUnittests = jsonParser.parseXmlForFailedElements(testresult).getNumOfFailedTests();
         Assert.assertEquals(0, failedUnittests);
 
     }
@@ -60,7 +60,7 @@ public class JsonParserTest {
         String str = FileUtils.readFileToString(file, "utf-8");
 
         UnittestResultParser jsonParser = new UnittestResultParser();
-        int failedUnittests = jsonParser.parseXmlForFailedElements(str);
+        int failedUnittests = jsonParser.parseXmlForFailedElements(str).getNumOfFailedTests();
         Assert.assertEquals(0, failedUnittests);
 
     }
@@ -71,7 +71,7 @@ public class JsonParserTest {
         File file = new File(classLoader.getResource("sampleAtcResult.xml").getFile());
         String str = FileUtils.readFileToString(file, "utf-8");
 
-        AtcCheckResultParser jsonParser = new AtcCheckResultParser();
+        AtcCheckResultParser jsonParser = new AtcCheckResultParser(true);
         int failedAtcChecks = jsonParser.parseXmlForFailedElements(str);
         Assert.assertEquals(1, failedAtcChecks);
     }
@@ -82,12 +82,10 @@ public class JsonParserTest {
         File file = new File(classLoader.getResource("sampleAtcResultWithAtcToolFailures.xml").getFile());
         String str = FileUtils.readFileToString(file, "utf-8");
 
-        AtcCheckResultParser jsonParser = new AtcCheckResultParser();
+        AtcCheckResultParser jsonParser = new AtcCheckResultParser(true);
         int failedAtcChecks = jsonParser.parseXmlForFailedElements(str);
         Assert.assertEquals(82, failedAtcChecks);
-
     }
-
 
     @Test
     public void SimpleTestUnittestResultNoTests() throws IOException {
@@ -96,19 +94,42 @@ public class JsonParserTest {
         String str = FileUtils.readFileToString(file, "utf-8");
 
         UnittestResultParser jsonParser = new UnittestResultParser();
-        int failedUnittests = jsonParser.parseXmlForFailedElements(str);
+        int failedUnittests = jsonParser.parseXmlForFailedElements(str).getNumOfFailedTests();
         Assert.assertEquals(0, failedUnittests);
     }
 
-        @Test
+    @Test
     public void SimpleTestUnittestResultWithFailure() throws IOException {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(classLoader.getResource("unittestResultWithFailure.xml").getFile());
         String str = FileUtils.readFileToString(file, "utf-8");
 
         UnittestResultParser jsonParser = new UnittestResultParser();
-        int failedUnittests = jsonParser.parseXmlForFailedElements(str);
+        int failedUnittests = jsonParser.parseXmlForFailedElements(str).getNumOfFailedTests();
         Assert.assertEquals(1, failedUnittests);
+    }
+    
+    @Test
+    public void TestUnittestResultForNW752WithFailures() throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("unitTestResultForNW752.xml").getFile());
+        String str = FileUtils.readFileToString(file, "utf-8");
+
+        UnittestResultParser jsonParser = new UnittestResultParser();
+        UnitTestResult unitTestResult = jsonParser.parseXmlForFailedElements(str);
+        Assert.assertEquals(2, unitTestResult.getNumOfFailedTests());
+        Assert.assertEquals(9, unitTestResult.getMessages().size());
+    }
+    
+    @Test
+    public void atcResultWithErrorsAndWarningsSkipped() throws IOException {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("sampleAtcResultWithAtcToolFailures.xml").getFile());
+        String str = FileUtils.readFileToString(file, "utf-8");
+
+        AtcCheckResultParser jsonParser = new AtcCheckResultParser(false);
+        int failedAtcChecks = jsonParser.parseXmlForFailedElements(str);
+        Assert.assertEquals(28, failedAtcChecks);
     }
 
 }

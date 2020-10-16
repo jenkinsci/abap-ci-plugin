@@ -38,7 +38,7 @@ public class AtcHttpPostHandlerTest {
     public void SimpleTest() throws IOException {
        
         SapConnectionInfo sapConnectionInfo = null; 
-        AtcHttpPostHandler  cut  = new AtcHttpPostHandler(sapConnectionInfo, "SAP_TEST_PACKAGE", null); 
+        AtcHttpPostHandler  cut  = new AtcHttpPostHandler(sapConnectionInfo, "SAP_TEST_PACKAGE", null, "DEFAULT"); 
         String postMessage = cut.GetPostMessage(); 
         Assert.assertNotNull(postMessage);
         Assert.assertTrue(postMessage.contains("/sap/bc/adt/vit/wb/object_type/devck/object_name/SAP_TEST_PACKAGE"));  

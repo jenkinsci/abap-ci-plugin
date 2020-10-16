@@ -23,60 +23,74 @@
  */
 package com.mycompany.resultParser;
 
-import com.iwombat.util.StringUtil;
-import org.apache.commons.lang.StringUtils;
-import org.json.JSONObject;
-import org.json.XML;
 import java.io.IOException;
+
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.XML;
 
 /**
  *
  * @author Andreas Gautsch
  */
 public class AtcCheckResultParser {
+	private boolean treatWarningAtcChecksAsErrors;
 
-    public int parseXmlForFailedElements(String xml) throws IOException {
-        int numFailedAtcChecks = 0;
+	public AtcCheckResultParser(boolean treatWarningAtcChecksAsErrors) {
+		super();
+		this.treatWarningAtcChecksAsErrors = treatWarningAtcChecksAsErrors;
+	}
 
-        JSONObject jsonObject = XML.toJSONObject(xml);
+	public int parseXmlForFailedElements(String xml) throws IOException {
+		int numFailedAtcChecks = 0;
 
-        JSONObject atcWorklistJsonObject = jsonObject.optJSONObject("atcworklist:worklistRun");
+		JSONObject jsonObject = XML.toJSONObject(xml);
 
-        if (atcWorklistJsonObject != null && !atcWorklistJsonObject.isEmpty()) {
-            {
-                JSONObject atcWorklistInfoJsonObject = atcWorklistJsonObject.optJSONObject("atcworklist:infos");
-                if (atcWorklistInfoJsonObject != null && !atcWorklistInfoJsonObject.isEmpty()) {
-                    JSONObject atcInfoJsonObject = atcWorklistInfoJsonObject.optJSONObject("atcinfo:info");
-                    if (atcInfoJsonObject != null && !atcInfoJsonObject.isEmpty()) {
-                        numFailedAtcChecks = ExtractFailedAtcChecks(atcInfoJsonObject);
-                    } else {
-                        JSONArray atcInfoJsonArray = atcWorklistInfoJsonObject.optJSONArray("atcinfo:info");
-                        if (atcInfoJsonArray != null) {
-                            for (int numElement = 0; numElement < atcInfoJsonArray.length(); numElement++) {
-                                JSONObject atcInfoDescriptionJsonObject = atcInfoJsonArray.getJSONObject(numElement);
-                                numFailedAtcChecks = ExtractFailedAtcChecks(atcInfoDescriptionJsonObject);
-                            }
-                        }
-                    }
-                }
-            }
-        }
+		JSONObject atcWorklistJsonObject = jsonObject.optJSONObject("atcworklist:worklistRun");
 
-        return numFailedAtcChecks;
-    }
+		if (atcWorklistJsonObject != null && !atcWorklistJsonObject.isEmpty()) {
+			JSONObject atcWorklistInfoJsonObject = atcWorklistJsonObject.optJSONObject("atcworklist:infos");
 
-    private int ExtractFailedAtcChecks(JSONObject atcInfoDescriptionJsonObject) throws NumberFormatException, JSONException {
-        int numFailedAtcChecks = 0;
-        String description = atcInfoDescriptionJsonObject.getString("atcinfo:description");
-        String[] descriptionInfo = description.split(",");
-        if (descriptionInfo.length == 3) {
-            int critical = Integer.parseInt(descriptionInfo[0]);
-            int warning = Integer.parseInt(descriptionInfo[1]);
-            numFailedAtcChecks = critical + warning;
-        }
-        return numFailedAtcChecks;
-    }
+			if (atcWorklistInfoJsonObject != null && !atcWorklistInfoJsonObject.isEmpty()) {
+				JSONObject atcInfoJsonObject = atcWorklistInfoJsonObject.optJSONObject("atcinfo:info");
+
+				if (atcInfoJsonObject != null && !atcInfoJsonObject.isEmpty()) {
+					numFailedAtcChecks = ExtractFailedAtcChecks(atcInfoJsonObject);
+				} else {
+					JSONArray atcInfoJsonArray = atcWorklistInfoJsonObject.optJSONArray("atcinfo:info");
+
+					if (atcInfoJsonArray != null) {
+						for (int numElement = 0; numElement < atcInfoJsonArray.length(); numElement++) {
+							JSONObject atcInfoDescriptionJsonObject = atcInfoJsonArray.getJSONObject(numElement);
+							numFailedAtcChecks = ExtractFailedAtcChecks(atcInfoDescriptionJsonObject);
+						}
+					}
+				}
+			}
+		}
+
+		return numFailedAtcChecks;
+	}
+
+	private int ExtractFailedAtcChecks(JSONObject atcInfoDescriptionJsonObject)
+			throws NumberFormatException, JSONException {
+		int numFailedAtcChecks = 0;
+		String description = atcInfoDescriptionJsonObject.getString("atcinfo:description");
+		String[] descriptionInfo = description.split(",");
+
+		if (descriptionInfo.length == 3) {
+			int critical = Integer.parseInt(descriptionInfo[0]);
+			int warning = Integer.parseInt(descriptionInfo[1]);
+
+			if (this.treatWarningAtcChecksAsErrors == true) {
+				numFailedAtcChecks = critical + warning;
+			} else {
+				numFailedAtcChecks = critical;
+			}
+		}
+
+		return numFailedAtcChecks;
+	}
 
 }
