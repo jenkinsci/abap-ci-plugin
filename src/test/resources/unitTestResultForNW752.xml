@@ -1,0 +1,45 @@
+?xml version="1.0" encoding="utf-8"?>
+<aunit:runResult xmlns:aunit="http://www.sap.com/adt/aunit">
+    <program adtcore:uri="/sap/bc/adt/oo/classes/zcl_demo_d_calc_salesorder_id" adtcore:type="CLAS/OC" adtcore:name="ZCL_DEMO_D_CALC_SALESORDER_ID" uriType="classic"
+        xmlns:adtcore="http://www.sap.com/adt/core">
+        <testClasses>
+            <testClass adtcore:uri="/sap/bc/adt/oo/classes/zcl_demo_d_calc_salesorder_id/includes/testclasses#start=13,6" adtcore:type="CLAS/OCN/testclasses" adtcore:name="LTC1" uriType="classic" durationCategory="short" riskLevel="harmless">
+                <testMethods>
+                    <testMethod adtcore:uri="/sap/bc/adt/oo/classes/zcl_demo_d_calc_salesorder_id/includes/testclasses#start=15,9" adtcore:type="CLAS/OCN/testclasses" adtcore:name="MAKE_ACTION" executionTime="0" uriType="classic" unit="s">
+                        <alerts>
+                            <alert kind="failedAssertion" severity="critical">
+                                <title>Critical Assertion Error: 'Make_Action: ASSERT_SUBRC'</title>
+                                <details>
+                                    <detail text="Return Code sy-subrc [4] (Expected [0])"/>
+                                    <detail text="'SubRc differs.'"/>
+                                    <detail text="Test 'LTC1-&gt;MAKE_ACTION' in Main Program 'ZCL_DEMO_D_CALC_SALESORDER_ID=CP'."/>
+                                </details>
+                                <stack>
+                                    <stackEntry adtcore:uri="/sap/bc/adt/oo/classes/zcl_demo_d_calc_salesorder_id/includes/testclasses#start=16,0" adtcore:type="CLAS/OCN/testclasses" adtcore:name="ZCL_DEMO_D_CALC_SALESORDER_ID" adtcore:description="Include: &lt;ZCL_DEMO_D_CALC_SALESORDER_ID=CCAU&gt; Line: &lt;16&gt; (MAKE_ACTION)"/>
+                                </stack>
+                            </alert>
+                        </alerts>
+                    </testMethod>
+                    <testMethod adtcore:uri="/sap/bc/adt/oo/classes/zcl_demo_d_calc_salesorder_id/includes/testclasses#start=19,9" adtcore:type="CLAS/OCN/testclasses" adtcore:name="SUBMIT_RESULT" executionTime="0" uriType="classic" unit="s">
+                        <alerts>
+                            <alert kind="failedAssertion" severity="critical">
+                                <title>Critical Assertion Error: 'Submit_Result: ASSERT_EQUALS'</title>
+                                <details>
+                                    <detail text="Different Values:">
+                                        <details>
+                                            <detail text="Expected [A] Actual [D]"/>
+                                        </details>
+                                    </detail>
+                                    <detail text="Test 'LTC1-&gt;SUBMIT_RESULT' in Main Program 'ZCL_DEMO_D_CALC_SALESORDER_ID=CP'."/>
+                                </details>
+                                <stack>
+                                    <stackEntry adtcore:uri="/sap/bc/adt/oo/classes/zcl_demo_d_calc_salesorder_id/includes/testclasses#start=20,0" adtcore:type="CLAS/OCN/testclasses" adtcore:name="ZCL_DEMO_D_CALC_SALESORDER_ID" adtcore:description="Include: &lt;ZCL_DEMO_D_CALC_SALESORDER_ID=CCAU&gt; Line: &lt;20&gt; (SUBMIT_RESULT)"/>
+                                </stack>
+                            </alert>
+                        </alerts>
+                    </testMethod>
+                </testMethods>
+            </testClass>
+        </testClasses>
+    </program>
+</aunit:runResult>

@@ -42,79 +42,88 @@ import org.apache.http.impl.client.DefaultHttpClient;
  */
 public abstract class AHttpPostHandler implements IHttpPostHandler {
 
-    private final SapConnectionInfo _sapConnectionInfo;
-    protected final String _sapPackageName;
-    protected final TaskListener _listener; 
+	private final SapConnectionInfo _sapConnectionInfo;
+	protected final String _sapPackageName;
+	protected final TaskListener _listener;
 
-    public AHttpPostHandler(SapConnectionInfo sapConnectionInfo, String packageName, TaskListener listener) {
-        _sapConnectionInfo = sapConnectionInfo;
-        _sapPackageName = packageName;
-        _listener = listener; 
-    }
+	public AHttpPostHandler(SapConnectionInfo sapConnectionInfo, String packageName, TaskListener listener) {
+		_sapConnectionInfo = sapConnectionInfo;
+		_sapPackageName = packageName;
+		_listener = listener;
+	}
 
-    abstract HttpResponse postRequest(AdtInitialConnectionReponseHeaders adtInitialConnectionResponseHeaders) throws MalformedURLException, IOException;
+	abstract HttpResponse postRequest(AdtInitialConnectionReponseHeaders adtInitialConnectionResponseHeaders)
+			throws MalformedURLException, IOException;
 
-    abstract String GetTokenUrlTarget(); 
-    abstract String GetMainUrlTarget();
+	abstract String GetTokenUrlTarget();
 
-    abstract String GetPostMessage() throws IOException;
+	abstract String GetMainUrlTarget();
 
-    @Override
-    public HttpResponse executeWithToken() throws MalformedURLException, IOException, HttpCsrfTokenOrCookieCouldNotBeRetrievedException {
+	abstract String GetPostMessage() throws IOException;
 
-        AdtInitialConnectionReponseHeaders adtInitialConnectionResponseHeaders = GetToken();
+	@Override
+	public HttpResponse executeWithToken()
+			throws MalformedURLException, IOException, HttpCsrfTokenOrCookieCouldNotBeRetrievedException {
 
-        if (adtInitialConnectionResponseHeaders.isValid()) {
-            return postRequest(adtInitialConnectionResponseHeaders);
-        } else {
-            throw new HttpCsrfTokenOrCookieCouldNotBeRetrievedException("csrf-token or cookie not valid");
-        }
-    }
+		AdtInitialConnectionReponseHeaders adtInitialConnectionResponseHeaders = GetToken();
 
-    @Override
-    public HttpResponse execute() throws MalformedURLException, IOException {
-        return postRequest(null);
-    }
+		if (adtInitialConnectionResponseHeaders.isValid()) {
+			return postRequest(adtInitialConnectionResponseHeaders);
+		} else {
+			throw new HttpCsrfTokenOrCookieCouldNotBeRetrievedException("csrf-token or cookie not valid");
+		}
+	}
 
-    private AdtInitialConnectionReponseHeaders GetToken() throws UnsupportedEncodingException, IOException {
+	@Override
+	public HttpResponse execute() throws MalformedURLException, IOException {
+		return postRequest(null);
+	}
 
-        HttpClient httpclient = new DefaultHttpClient();
+	private AdtInitialConnectionReponseHeaders GetToken() throws UnsupportedEncodingException, IOException {
 
+		HttpClient httpclient = new DefaultHttpClient();
+		String url = BuildHttpUrl(GetTokenUrlTarget());
 
-        String url = BuildHttpUrl(GetTokenUrlTarget());
-        
-        _listener.getLogger().println("ConnectionResponseHeader Token Url: " + url);
-        HttpGet httpget = new HttpGet(url);
+		_listener.getLogger().println("ConnectionResponseHeader Token Url: " + url);
+		HttpGet httpget = new HttpGet(url);
 
-        httpget.setHeader("Authorization", "Basic " + EncodeCredentials());
-        httpget.setHeader("x-csrf-token", "fetch");
-        HttpResponse res = httpclient.execute(httpget);
-        _listener.getLogger().println("ConnectionResponseHeader Token StatusCode: " + res.getStatusLine().getStatusCode());
-        Header tokenHeader = res.getFirstHeader("x-csrf-token");
-        Header[] cookieHeaders = res.getHeaders("set-Cookie");
+		httpget.setHeader("Authorization", "Basic " + EncodeCredentials());
+		httpget.setHeader("x-csrf-token", "fetch");
+		HttpResponse res = httpclient.execute(httpget);
+		_listener.getLogger()
+				.println("ConnectionResponseHeader Token StatusCode: " + res.getStatusLine().getStatusCode());
+		Header tokenHeader = res.getFirstHeader("x-csrf-token");
+		Header[] cookieHeaders = res.getHeaders("set-Cookie");
 
-        return new AdtInitialConnectionReponseHeaders(tokenHeader, cookieHeaders);
-    }
+		return new AdtInitialConnectionReponseHeaders(tokenHeader, cookieHeaders);
+	}
 
-    private String EncodeCredentials() throws UnsupportedEncodingException {
-        return Base64.getEncoder().encodeToString((_sapConnectionInfo.GetSapCredentials().GetUsername() + ":" + _sapConnectionInfo.GetSapCredentials().GetPassword().getPlainText()).getBytes("UTF-8"));
-    }
+	private String EncodeCredentials() throws UnsupportedEncodingException {
+		return Base64.getEncoder().encodeToString((_sapConnectionInfo.GetSapCredentials().GetUsername() + ":"
+				+ _sapConnectionInfo.GetSapCredentials().GetPassword().getPlainText()).getBytes("UTF-8"));
+	}
 
-    protected String BuildHttpUrl(String path) {
+	protected String BuildHttpUrl(String path) {
 
-        String appendCharacter = path.contains("?") ?  "&" : "?"; 
-        return _sapConnectionInfo.GetSapServerInfo().GetProtocol() + "://" + _sapConnectionInfo.GetSapServerInfo().GetSapServer() + ":" + _sapConnectionInfo.GetSapServerInfo().GetSapPort() + path + appendCharacter + "sap-client=" + _sapConnectionInfo.GetSapServerInfo().GetMandant() + "&sap-language=EN";
-    }
+		String appendCharacter = path.contains("?") ? "&" : "?";
+		return _sapConnectionInfo.GetSapServerInfo().GetProtocol() + "://"
+				+ _sapConnectionInfo.GetSapServerInfo().GetSapServer() + ":"
+				+ _sapConnectionInfo.GetSapServerInfo().GetSapPort() + path + appendCharacter + "sap-client="
+				+ _sapConnectionInfo.GetSapServerInfo().GetMandant() + "&sap-language=EN";
+	}
 
-    protected void AddHeaderForHttpPostRequest(HttpPost httppost, AdtInitialConnectionReponseHeaders adtInitialConnectionResponseHeaders) throws UnsupportedEncodingException {
-        httppost.addHeader("Authorization", "Basic " + EncodeCredentials());
-        httppost.addHeader("Content-Type", "application/xml");
-        if (adtInitialConnectionResponseHeaders != null) {
-            httppost.addHeader("X-CSRF-Token", adtInitialConnectionResponseHeaders.getToken());
-            for (Header header : adtInitialConnectionResponseHeaders.getCookieHeaders()) {
-                httppost.addHeader("Cookie", header.getValue());
-            }
-        }
-    }
+	protected void AddHeaderForHttpPostRequest(HttpPost httppost,
+			AdtInitialConnectionReponseHeaders adtInitialConnectionResponseHeaders)
+			throws UnsupportedEncodingException {
+		httppost.addHeader("Authorization", "Basic " + EncodeCredentials());
+		httppost.addHeader("Content-Type", "application/xml");
+		httppost.addHeader("Accept", "application/xml, text/plain");
+		if (adtInitialConnectionResponseHeaders != null) {
+			httppost.addHeader("X-CSRF-Token", adtInitialConnectionResponseHeaders.getToken());
+			for (Header header : adtInitialConnectionResponseHeaders.getCookieHeaders()) {
+				httppost.addHeader("Cookie", header.getValue());
+			}
+		}
+	}
 
 }

@@ -12,41 +12,38 @@ import org.jvnet.hudson.test.JenkinsRule;
 
 public class HelloWorldBuilderTest {
 
-    @Rule
-    public JenkinsRule jenkins = new JenkinsRule();
+	@Rule
+	public JenkinsRule jenkins = new JenkinsRule();
 
-    final String name = "TESTPROJECT";
+	final String packageName = "TESTPROJECT";
+	final String atcVariant = "DEFAULT";
 
-    @Test
-    public void testConfigRoundtrip() throws Exception {
-        FreeStyleProject project = jenkins.createFreeStyleProject();
-        project.getBuildersList().add(new AbapCiBuilder(name));
-        project = jenkins.configRoundtrip(project);
-        jenkins.assertEqualDataBoundBeans(new AbapCiBuilder(name), project.getBuildersList().get(0));
-    }
+	@Test
+	public void testConfigRoundtrip() throws Exception {
+		FreeStyleProject project = jenkins.createFreeStyleProject();
+		project.getBuildersList().add(new AbapCiBuilder(packageName, atcVariant));
+		project = jenkins.configRoundtrip(project);
+		jenkins.assertEqualDataBoundBeans(new AbapCiBuilder(packageName, atcVariant), project.getBuildersList().get(0));
+	}
 
+	public void testBuild() throws Exception {
+		FreeStyleProject project = jenkins.createFreeStyleProject();
+		AbapCiBuilder builder = new AbapCiBuilder(packageName, atcVariant);
+		project.getBuildersList().add(builder);
 
-    public void testBuild() throws Exception {
-        FreeStyleProject project = jenkins.createFreeStyleProject();
-        AbapCiBuilder builder = new AbapCiBuilder(name);
-        project.getBuildersList().add(builder);
+		FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
+		jenkins.assertLogContains("Hello, " + packageName, build);
+	}
 
-        FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);
-        jenkins.assertLogContains("Hello, " + name, build);
-    }
-
-    public void testScriptedPipeline() throws Exception {
-        String agentLabel = "my-agent";
-        jenkins.createOnlineSlave(Label.get(agentLabel));
-        WorkflowJob job = jenkins.createProject(WorkflowJob.class, "test-scripted-pipeline");
-        String pipelineScript
-                = "node {\n"
-                + "  abapCi '" + name + "'\n"
-                + "}";
-        job.setDefinition(new CpsFlowDefinition(pipelineScript, true));
-        WorkflowRun completedBuild = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));
-        String expectedString = "Hello, " + name + "!";
-        jenkins.assertLogContains(expectedString, completedBuild);
-    }
+	public void testScriptedPipeline() throws Exception {
+		String agentLabel = "my-agent";
+		jenkins.createOnlineSlave(Label.get(agentLabel));
+		WorkflowJob job = jenkins.createProject(WorkflowJob.class, "test-scripted-pipeline");
+		String pipelineScript = "node {\n" + "  abapCi '" + packageName + "'\n" + "}";
+		job.setDefinition(new CpsFlowDefinition(pipelineScript, true));
+		WorkflowRun completedBuild = jenkins.assertBuildStatusSuccess(job.scheduleBuild2(0));
+		String expectedString = "Hello, " + packageName + "!";
+		jenkins.assertLogContains(expectedString, completedBuild);
+	}
 
 }

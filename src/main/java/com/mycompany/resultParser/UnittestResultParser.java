@@ -23,11 +23,14 @@
  */
 package com.mycompany.resultParser;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.XML;
-import java.io.IOException;
-import org.json.JSONArray;
 
 /**
  *
@@ -35,78 +38,132 @@ import org.json.JSONArray;
  */
 public class UnittestResultParser {
 
-    public int parseXmlForFailedElements(String xml) throws IOException {
-        int numFailedUnittests = 0;
+	public UnitTestResult parseXmlForFailedElements(String xml) throws IOException {
+		int numFailedUnittests = 0;
+		List<String> messages = new ArrayList<String>();
+		UnitTestResult result = new UnitTestResult();
 
-        JSONObject jsonObject = XML.toJSONObject(xml);
+		JSONObject jsonObject = XML.toJSONObject(xml);
+		JSONObject aUnitJsonObject = jsonObject.getJSONObject("aunit:runResult");
 
-        JSONObject aUnitJsonObject = jsonObject.getJSONObject("aunit:runResult");
+		if (aUnitJsonObject.has("alerts")) {
+			JSONObject alertsJsonObject = aUnitJsonObject.optJSONObject("alerts");
 
-        if (aUnitJsonObject.has("alerts")) {
-            JSONObject alertsJsonObject = aUnitJsonObject.optJSONObject("alerts");
-            if (alertsJsonObject != null && !alertsJsonObject.isEmpty()) {
-                numFailedUnittests += GetNumberOfFailedTests(alertsJsonObject);
-            }
+			if (alertsJsonObject != null && !alertsJsonObject.isEmpty()) {
+				numFailedUnittests += GetNumberOfFailedTests(alertsJsonObject);
+			}
+		}
 
-            JSONObject programJsonObject = aUnitJsonObject.optJSONObject("program");
-            if (programJsonObject != null && !programJsonObject.isEmpty()) {
-                {
-                    String alertContentNested = programJsonObject.getString("alerts");
-                    if (!StringUtils.isEmpty(alertContentNested)) {
-                        numFailedUnittests++;
-                    }
-                }
+		if (aUnitJsonObject.has("program")) {
+			JSONObject programJsonObject = aUnitJsonObject.optJSONObject("program");
 
-                if (programJsonObject.has("testClasses")) {
-                    Object testClassesJsonObject = programJsonObject.get("testClasses");
+			if (programJsonObject != null && !programJsonObject.isEmpty()) {
+				String alertContentNested = programJsonObject.optString("alerts");
 
-                    if (testClassesJsonObject instanceof JSONObject) {
-                        JSONObject testClassJsonObject = ((JSONObject) testClassesJsonObject).getJSONObject("testClass");
-                        JSONObject testMethods = testClassJsonObject.getJSONObject("testMethods");
-                        JSONObject testMethod = testMethods.optJSONObject("testMethod");
-                        if (testMethod != null && !testMethod.isEmpty()) {
-                            if (testMethod.has("alerts")) {
-                                JSONObject testMethodAlerts = testMethod.optJSONObject("alerts");
-                                if (testMethodAlerts != null && !testMethodAlerts.isEmpty()) {
-                                    numFailedUnittests++;
-                                }
-                            }
-                        } else {
-                            JSONArray testMethodArray = testMethods.optJSONArray("testMethod");
-                            if (testMethodArray != null) {
-                                for (int numElement = 0; numElement < testMethodArray.length(); numElement++) {
-                                    JSONObject testMethodArrayObject = testMethodArray.getJSONObject(numElement);
-                                    if (testMethodArrayObject != null && !testMethodArrayObject.isEmpty()) {
-                                        if (testMethodArrayObject.has("alerts")) {
-                                            JSONObject testMethodAlerts = testMethodArrayObject.optJSONObject("alerts");
-                                            if (testMethodAlerts != null && !testMethodAlerts.isEmpty()) {
-                                                numFailedUnittests++;
-                                            }
-                                        }
-                                    }
-                                }
+				if (!StringUtils.isEmpty(alertContentNested)) {
+					numFailedUnittests++;
+				}
 
-                            }
-                        }
-                    }
-                }
-            }
+				if (programJsonObject.has("testClasses")) {
+					Object testClassesJsonObject = programJsonObject.get("testClasses");
 
-        }
-               return numFailedUnittests;
-    }
+					if (testClassesJsonObject instanceof JSONObject) {
+						JSONObject testClassJsonObject = ((JSONObject) testClassesJsonObject)
+								.getJSONObject("testClass");
+						JSONObject testMethods = testClassJsonObject.getJSONObject("testMethods");
+						JSONObject testMethod = testMethods.optJSONObject("testMethod");
 
+						if (testMethod != null && !testMethod.isEmpty()) {
+							if (testMethod.has("alerts")) {
+								JSONObject testMethodAlerts = testMethod.optJSONObject("alerts");
 
-    
+								if (testMethodAlerts != null && !testMethodAlerts.isEmpty()) {
+									numFailedUnittests++;
+									messages.addAll(getTestMethodMessages(testMethodAlerts));
+								}
+							}
+						} else {
+							JSONArray testMethodArray = testMethods.optJSONArray("testMethod");
+							if (testMethodArray != null) {
+								for (int numElement = 0; numElement < testMethodArray.length(); numElement++) {
+									JSONObject testMethodArrayObject = testMethodArray.getJSONObject(numElement);
 
-    private int GetNumberOfFailedTests(JSONObject alertsJsonObject) {
-        JSONObject alertJsonObject = alertsJsonObject.optJSONObject("alert");
-        if (alertJsonObject != null && !alertJsonObject.isEmpty()) {
-            if (!"tolerable".equals(alertJsonObject.getString("severity"))) {
-                return 1;
-            }
-        }
-        return 0;
-    }
+									if (testMethodArrayObject != null && !testMethodArrayObject.isEmpty()) {
+										if (testMethodArrayObject.has("alerts")) {
+											JSONObject testMethodAlerts = testMethodArrayObject.optJSONObject("alerts");
+
+											if (testMethodAlerts != null && !testMethodAlerts.isEmpty()) {
+												numFailedUnittests++;
+												messages.addAll(getTestMethodMessages(testMethodAlerts));
+											}
+										}
+									}
+								}
+
+							}
+						}
+					}
+				}
+			}
+
+		}
+
+		result.setNumOfFailedTests(numFailedUnittests);
+		result.appendMessages(messages);
+		return result;
+	}
+
+	private int GetNumberOfFailedTests(JSONObject alertsJsonObject) {
+		JSONObject alertJsonObject = alertsJsonObject.optJSONObject("alert");
+
+		if (alertJsonObject != null && !alertJsonObject.isEmpty()) {
+			if (!"tolerable".equals(alertJsonObject.getString("severity"))) {
+				return 1;
+			}
+		}
+
+		return 0;
+	}
+
+	private List<String> getTestMethodMessages(JSONObject testMethodAlerts) {
+		List<String> result = new ArrayList<String>();
+
+		if (testMethodAlerts.has("alert")) {
+			JSONObject testMethodAlert = testMethodAlerts.optJSONObject("alert");
+
+			if (testMethodAlert != null && !testMethodAlert.isEmpty()) {
+				result.add(testMethodAlert.getString("title"));
+
+				JSONObject details = testMethodAlert.optJSONObject("details");
+
+				if (details != null && !details.isEmpty()) {
+					JSONArray detailEntries = details.optJSONArray("detail");
+
+					if (detailEntries != null && !detailEntries.isEmpty()) {
+						detailEntries.forEach(item -> {
+							JSONObject entry = (JSONObject) item;
+
+							if (entry.has("details")) {
+								JSONObject innerDetails = entry.optJSONObject("details");
+								JSONObject innerDetail = innerDetails.optJSONObject("detail");
+
+								if (innerDetail != null && !innerDetail.isEmpty()) {
+									result.add(innerDetail.getString("text"));
+								}
+							} else {
+								result.add(entry.getString("text"));
+							}
+						});
+					}
+
+					if (result.size() > 0) {
+						result.add("---------------------------");
+					}
+				}
+			}
+		}
+
+		return result;
+	}
 
 }
