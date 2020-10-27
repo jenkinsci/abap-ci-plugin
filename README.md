@@ -5,7 +5,7 @@
 [![Jenkins Plugin](https://img.shields.io/jenkins/plugin/v/abap-ci.svg)](https://plugins.jenkins.io/abap-ci)
 [![Issues](https://img.shields.io/github/issues/jenkinsci/abap-ci-plugin)](https://github.com/jenkinsci/abap-ci-plugin/issues)
 [![Contributors](https://img.shields.io/github/contributors/jenkinsci/abap-ci-plugin.svg)](https://github.com/jenkinsci/abap-ci-plugin/graphs/contributors)
-
+![Java CI with Maven](https://github.com/jenkinsci/abap-ci-plugin/workflows/Java%20CI%20with%20Maven/badge.svg)
 ## Getting Started 
 
 - Install the plugin using the `Jenkins Plugin Manager` and restart Jenkins.
