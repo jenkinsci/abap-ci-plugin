@@ -4,8 +4,11 @@
             <actionName>CUSTOM-release</actionName>
             <displayName>release</displayName>
             <goals>
-                <goal>-X release:prepare</goal>
-                <goal>-X release:perform</goal>
+                <goal>release:prepare</goal>
+                <goal>release:perform</goal>
             </goals>
+            <properties>
+                <maven.test.skip>true</maven.test.skip>
+            </properties>
         </action>
     </actions>
