@@ -33,16 +33,15 @@ import org.junit.Test;
  */
 public class UnittestHttpPostHandlerTest {
 
- 
-    @Test
-    public void SimpleTest() throws IOException {
-       
-        SapConnectionInfo sapConnectionInfo = null; 
-        UnittestHttpPostHandler  httpPostHandler  = new UnittestHttpPostHandler(sapConnectionInfo, "SAP_TEST_PACKAGE", null); 
-        String postMessage = httpPostHandler.GetPostMessage(); 
-        Assert.assertNotNull(postMessage);
-        Assert.assertTrue(postMessage.contains("/sap/bc/adt/vit/wb/object_type/devck/object_name/SAP_TEST_PACKAGE"));  
+	@Test
+	public void SimpleTest() throws IOException {
 
-    }
+		SapConnectionInfo sapConnectionInfo = null;
+		UnittestHttpPostHandler httpPostHandler = new UnittestHttpPostHandler(sapConnectionInfo, "SAP_TEST_PACKAGE",
+				null);
+		String postMessage = httpPostHandler.GetPostMessage();
+		Assert.assertNotNull(postMessage);
+		Assert.assertTrue(postMessage.contains("/sap/bc/adt/vit/wb/object_type/devck/object_name/SAP_TEST_PACKAGE"));
+
+	}
 }
- 

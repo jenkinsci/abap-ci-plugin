@@ -29,8 +29,9 @@ package com.mycompany.abapci.AdtCommunication;
  */
 public class HttpCsrfTokenOrCookieCouldNotBeRetrievedException extends Exception {
 
-    HttpCsrfTokenOrCookieCouldNotBeRetrievedException(String csrftoken_or_cookie_not_valid) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+	HttpCsrfTokenOrCookieCouldNotBeRetrievedException(String csrftoken_or_cookie_not_valid) {
+		throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
+																		// Tools | Templates.
+	}
+
 }

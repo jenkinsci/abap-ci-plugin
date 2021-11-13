@@ -29,32 +29,32 @@ package com.mycompany.abapci.AdtCommunication;
  */
 public class SapServerInfo {
 
-    private final String _protocol;
-    private final String _sapServer;
-    private final int _port;
-    private final String _mandant;
+	private final String _protocol;
+	private final String _sapServer;
+	private final int _port;
+	private final String _mandant;
 
-    public SapServerInfo(String protocol, String sapServer, int port, String mandant)
-    {
-        _protocol = protocol; 
-        _sapServer = sapServer; 
-        _port = port; 
-        _mandant = mandant; 
-    }
-    String GetProtocol() {
-        return _protocol; 
-    }
+	public SapServerInfo(String protocol, String sapServer, int port, String mandant) {
+		_protocol = protocol;
+		_sapServer = sapServer;
+		_port = port;
+		_mandant = mandant;
+	}
 
-    String GetSapServer() {
-        return _sapServer; 
-    }
+	String GetProtocol() {
+		return _protocol;
+	}
 
-    int GetSapPort() {
-        return _port; 
-    }
+	String GetSapServer() {
+		return _sapServer;
+	}
 
-    String GetMandant() {
-        return _mandant; 
-    }
-    
+	int GetSapPort() {
+		return _port;
+	}
+
+	String GetMandant() {
+		return _mandant;
+	}
+
 }

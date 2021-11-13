@@ -7,7 +7,7 @@ import java.util.List;
 public class UnitTestResult {
 	private int numOfFailedTests;
 	private List<String> messages = new ArrayList<String>();
-	
+
 	public void setNumOfFailedTests(int numOfFailedTests) {
 		this.numOfFailedTests = numOfFailedTests;
 	}
@@ -15,7 +15,7 @@ public class UnitTestResult {
 	public void appendMessage(String message) {
 		messages.add(message);
 	}
-	
+
 	public void appendMessages(Collection<String> messages) {
 		this.messages.addAll(messages);
 	}

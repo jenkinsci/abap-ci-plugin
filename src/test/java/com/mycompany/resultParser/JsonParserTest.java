@@ -36,100 +36,96 @@ import org.junit.Test;
  */
 public class JsonParserTest {
 
-    @Test
-    public void SimpleUnittestresultOkTest() throws IOException {
-        String testresult = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
-                + "<aunit:runResult xmlns:aunit=\"http://www.sap.com/adt/aunit\">"
-                + "<alerts/>"
-                + "<program adtcore:uri=\"/sap/bc/adt/oo/classes/zcl_testclass\" adtcore:type=\"CLAS/OC\" adtcore:name=\"ZCL_TESTCLASS\" adtcore:packageName=\"ZTESTPACKAGE\" xmlns:adtcore=\"http://www.sap.com/adt/core\">"
-                + "<alerts/>"
-                + "<testClasses/>"
-                + "</program>"
-                + "</aunit:runResult>";
+	@Test
+	public void SimpleUnittestresultOkTest() throws IOException {
+		String testresult = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
+				+ "<aunit:runResult xmlns:aunit=\"http://www.sap.com/adt/aunit\">" + "<alerts/>"
+				+ "<program adtcore:uri=\"/sap/bc/adt/oo/classes/zcl_testclass\" adtcore:type=\"CLAS/OC\" adtcore:name=\"ZCL_TESTCLASS\" adtcore:packageName=\"ZTESTPACKAGE\" xmlns:adtcore=\"http://www.sap.com/adt/core\">"
+				+ "<alerts/>" + "<testClasses/>" + "</program>" + "</aunit:runResult>";
 
-        UnittestResultParser jsonParser = new UnittestResultParser();
-        int failedUnittests = jsonParser.parseXmlForFailedElements(testresult).getNumOfFailedTests();
-        Assert.assertEquals(0, failedUnittests);
+		UnittestResultParser jsonParser = new UnittestResultParser();
+		int failedUnittests = jsonParser.parseXmlForFailedElements(testresult).getNumOfFailedTests();
+		Assert.assertEquals(0, failedUnittests);
 
-    }
+	}
 
-    @Test
-    public void SimpleTestReadFile() throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("sampleUnittestresult.xml").getFile());
-        String str = FileUtils.readFileToString(file, "utf-8");
+	@Test
+	public void SimpleTestReadFile() throws IOException {
+		ClassLoader classLoader = getClass().getClassLoader();
+		File file = new File(classLoader.getResource("sampleUnittestresult.xml").getFile());
+		String str = FileUtils.readFileToString(file, "utf-8");
 
-        UnittestResultParser jsonParser = new UnittestResultParser();
-        int failedUnittests = jsonParser.parseXmlForFailedElements(str).getNumOfFailedTests();
-        Assert.assertEquals(0, failedUnittests);
+		UnittestResultParser jsonParser = new UnittestResultParser();
+		int failedUnittests = jsonParser.parseXmlForFailedElements(str).getNumOfFailedTests();
+		Assert.assertEquals(0, failedUnittests);
 
-    }
+	}
 
-    @Test
-    public void SimpleTestAtcResultWithErrors() throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("sampleAtcResult.xml").getFile());
-        String str = FileUtils.readFileToString(file, "utf-8");
+	@Test
+	public void SimpleTestAtcResultWithErrors() throws IOException {
+		ClassLoader classLoader = getClass().getClassLoader();
+		File file = new File(classLoader.getResource("sampleAtcResult.xml").getFile());
+		String str = FileUtils.readFileToString(file, "utf-8");
 
-        AtcCheckResultParser jsonParser = new AtcCheckResultParser(true);
-        int failedAtcChecks = jsonParser.parseXmlForFailedElements(str);
-        Assert.assertEquals(1, failedAtcChecks);
-    }
+		AtcCheckResultParser jsonParser = new AtcCheckResultParser(true);
+		int failedAtcChecks = jsonParser.parseXmlForFailedElements(str);
+		Assert.assertEquals(1, failedAtcChecks);
+	}
 
-    @Test
-    public void SimpleAtcResultWithAtcToolFailuresTest() throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("sampleAtcResultWithAtcToolFailures.xml").getFile());
-        String str = FileUtils.readFileToString(file, "utf-8");
+	@Test
+	public void SimpleAtcResultWithAtcToolFailuresTest() throws IOException {
+		ClassLoader classLoader = getClass().getClassLoader();
+		File file = new File(classLoader.getResource("sampleAtcResultWithAtcToolFailures.xml").getFile());
+		String str = FileUtils.readFileToString(file, "utf-8");
 
-        AtcCheckResultParser jsonParser = new AtcCheckResultParser(true);
-        int failedAtcChecks = jsonParser.parseXmlForFailedElements(str);
-        Assert.assertEquals(82, failedAtcChecks);
-    }
+		AtcCheckResultParser jsonParser = new AtcCheckResultParser(true);
+		int failedAtcChecks = jsonParser.parseXmlForFailedElements(str);
+		Assert.assertEquals(82, failedAtcChecks);
+	}
 
-    @Test
-    public void SimpleTestUnittestResultNoTests() throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("unittestResultNoTests.xml").getFile());
-        String str = FileUtils.readFileToString(file, "utf-8");
+	@Test
+	public void SimpleTestUnittestResultNoTests() throws IOException {
+		ClassLoader classLoader = getClass().getClassLoader();
+		File file = new File(classLoader.getResource("unittestResultNoTests.xml").getFile());
+		String str = FileUtils.readFileToString(file, "utf-8");
 
-        UnittestResultParser jsonParser = new UnittestResultParser();
-        int failedUnittests = jsonParser.parseXmlForFailedElements(str).getNumOfFailedTests();
-        Assert.assertEquals(0, failedUnittests);
-    }
+		UnittestResultParser jsonParser = new UnittestResultParser();
+		int failedUnittests = jsonParser.parseXmlForFailedElements(str).getNumOfFailedTests();
+		Assert.assertEquals(0, failedUnittests);
+	}
 
-    @Test
-    public void SimpleTestUnittestResultWithFailure() throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("unittestResultWithFailure.xml").getFile());
-        String str = FileUtils.readFileToString(file, "utf-8");
+	@Test
+	public void SimpleTestUnittestResultWithFailure() throws IOException {
+		ClassLoader classLoader = getClass().getClassLoader();
+		File file = new File(classLoader.getResource("unittestResultWithFailure.xml").getFile());
+		String str = FileUtils.readFileToString(file, "utf-8");
 
-        UnittestResultParser jsonParser = new UnittestResultParser();
-        int failedUnittests = jsonParser.parseXmlForFailedElements(str).getNumOfFailedTests();
-        Assert.assertEquals(1, failedUnittests);
-    }
-    
-    @Test
-    public void TestUnittestResultForNW752WithFailures() throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("unitTestResultForNW752.xml").getFile());
-        String str = FileUtils.readFileToString(file, "utf-8");
+		UnittestResultParser jsonParser = new UnittestResultParser();
+		int failedUnittests = jsonParser.parseXmlForFailedElements(str).getNumOfFailedTests();
+		Assert.assertEquals(1, failedUnittests);
+	}
 
-        UnittestResultParser jsonParser = new UnittestResultParser();
-        UnitTestResult unitTestResult = jsonParser.parseXmlForFailedElements(str);
-        Assert.assertEquals(2, unitTestResult.getNumOfFailedTests());
-        Assert.assertEquals(9, unitTestResult.getMessages().size());
-    }
-    
-    @Test
-    public void atcResultWithErrorsAndWarningsSkipped() throws IOException {
-        ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("sampleAtcResultWithAtcToolFailures.xml").getFile());
-        String str = FileUtils.readFileToString(file, "utf-8");
+	@Test
+	public void TestUnittestResultForNW752WithFailures() throws IOException {
+		ClassLoader classLoader = getClass().getClassLoader();
+		File file = new File(classLoader.getResource("unitTestResultForNW752.xml").getFile());
+		String str = FileUtils.readFileToString(file, "utf-8");
 
-        AtcCheckResultParser jsonParser = new AtcCheckResultParser(false);
-        int failedAtcChecks = jsonParser.parseXmlForFailedElements(str);
-        Assert.assertEquals(28, failedAtcChecks);
-    }
+		UnittestResultParser jsonParser = new UnittestResultParser();
+		UnitTestResult unitTestResult = jsonParser.parseXmlForFailedElements(str);
+		Assert.assertEquals(2, unitTestResult.getNumOfFailedTests());
+		Assert.assertEquals(9, unitTestResult.getMessages().size());
+	}
+
+	@Test
+	public void atcResultWithErrorsAndWarningsSkipped() throws IOException {
+		ClassLoader classLoader = getClass().getClassLoader();
+		File file = new File(classLoader.getResource("sampleAtcResultWithAtcToolFailures.xml").getFile());
+		String str = FileUtils.readFileToString(file, "utf-8");
+
+		AtcCheckResultParser jsonParser = new AtcCheckResultParser(false);
+		int failedAtcChecks = jsonParser.parseXmlForFailedElements(str);
+		Assert.assertEquals(28, failedAtcChecks);
+	}
 
 }

@@ -29,22 +29,20 @@ package com.mycompany.abapci.AdtCommunication;
  */
 public class SapConnectionInfo {
 
-    private final  SapServerInfo _sapServerInfo;
-    private final  SapCredentials _sapCredentials;
+	private final SapServerInfo _sapServerInfo;
+	private final SapCredentials _sapCredentials;
 
-    public SapConnectionInfo(SapServerInfo sapServerInfo, SapCredentials sapCredentials) {
-        _sapServerInfo = sapServerInfo;
-        _sapCredentials = sapCredentials;
-    }
+	public SapConnectionInfo(SapServerInfo sapServerInfo, SapCredentials sapCredentials) {
+		_sapServerInfo = sapServerInfo;
+		_sapCredentials = sapCredentials;
+	}
 
+	SapServerInfo GetSapServerInfo() {
+		return _sapServerInfo;
+	}
 
-     SapServerInfo GetSapServerInfo() {
-        return _sapServerInfo;  
-    }
+	SapCredentials GetSapCredentials() {
+		return _sapCredentials;
+	}
 
-     SapCredentials GetSapCredentials() {
-        return _sapCredentials;  
-    }
-
-   
 }

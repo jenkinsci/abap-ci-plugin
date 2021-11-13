@@ -50,8 +50,8 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 	@DataBoundConstructor
 	public AbapCiBuilder(String abapPackagename, String atcVariant) {
 		this.abapPackagename = abapPackagename;
-		
-		if(atcVariant == null || atcVariant.length() == 0) {
+
+		if (atcVariant == null || atcVariant.length() == 0) {
 			this.atcVariant = "DEFAULT";
 		} else {
 			this.atcVariant = atcVariant;
@@ -102,11 +102,11 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 	public void setAtcVariant(String variant) {
 		this.atcVariant = variant;
 	}
-	
+
 	public boolean getTreatWarningAtcChecksAsErrors() {
 		return treatWarningAtcChecksAsErrors;
 	}
-	
+
 	@DataBoundSetter
 	public void setTreatWarningAtcChecksAsErrors(boolean treatWarningAtcChecksAsErrors) {
 		this.treatWarningAtcChecksAsErrors = treatWarningAtcChecksAsErrors;
@@ -137,8 +137,8 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 				listener.getLogger().println("Run Unit Test flag is: " + isRunUnitTests());
 
 				if (isRunUnitTests()) {
-					listener.getLogger()
-							.println("########## Start ABAP Unit testrun for SAP packagename: " + abapPackagename + "! ##########");
+					listener.getLogger().println("########## Start ABAP Unit testrun for SAP packagename: "
+							+ abapPackagename + "! ##########");
 
 					IHttpPostHandler httpPostHandler = new UnittestHttpPostHandler(sapConnectionInfo, abapPackagename,
 							listener);
@@ -172,7 +172,8 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 				listener.getLogger().println("Run ATC checks flag is: " + isRunAtcChecks());
 
 				if (isRunAtcChecks()) {
-					listener.getLogger().println("########## Start ATC checkrun for SAP packagename: " + abapPackagename + "! ##########");
+					listener.getLogger().println(
+							"########## Start ATC checkrun for SAP packagename: " + abapPackagename + "! ##########");
 
 					IHttpPostHandler httpPostHandlerAtc = new AtcHttpPostHandler(sapConnectionInfo, abapPackagename,
 							listener, this.atcVariant);
@@ -182,7 +183,8 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 
 					if (atcResponse.getStatusLine().getStatusCode() == 200) {
 						String responseContent = EntityUtils.toString(atcResponse.getEntity(), "UTF-8");
-						//listener.getLogger().println("Response content of Ã�TC checks: " + responseContent);
+						// listener.getLogger().println("Response content of Ã�TC checks: " +
+						// responseContent);
 						AtcCheckResultParser jsonParser = new AtcCheckResultParser(this.treatWarningAtcChecksAsErrors);
 						numCriticalAtcChecks = jsonParser.parseXmlForFailedElements(responseContent);
 						listener.getLogger().println("Number of failed ATC checks: " + numCriticalAtcChecks);
