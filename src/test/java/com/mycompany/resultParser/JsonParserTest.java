@@ -30,6 +30,10 @@ import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import com.mycompany.result.AtcCheckResultParser;
+import com.mycompany.result.UnitTestCheckResult;
+import com.mycompany.result.UnittestResultParser;
+
 /**
  *
  * @author Andreas Gautsch
@@ -112,7 +116,7 @@ public class JsonParserTest {
 		String str = FileUtils.readFileToString(file, "utf-8");
 
 		UnittestResultParser jsonParser = new UnittestResultParser();
-		UnitTestResult unitTestResult = jsonParser.parseXmlForFailedElements(str);
+		UnitTestCheckResult unitTestResult = jsonParser.parseXmlForFailedElements(str);
 		Assert.assertEquals(2, unitTestResult.getNumOfFailedTests());
 		Assert.assertEquals(9, unitTestResult.getMessages().size());
 	}
