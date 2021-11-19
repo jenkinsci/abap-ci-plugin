@@ -48,7 +48,7 @@ public class JsonParserTest {
 				+ "<alerts/>" + "<testClasses/>" + "</program>" + "</aunit:runResult>";
 
 		UnittestResultParser jsonParser = new UnittestResultParser();
-		int failedUnittests = jsonParser.parseXmlForFailedElements(testresult).getNumOfFailedTests();
+		int failedUnittests = jsonParser.parseXmlForFailedElements(testresult).getNumberOfFailedTests();
 		Assert.assertEquals(0, failedUnittests);
 
 	}
@@ -60,7 +60,7 @@ public class JsonParserTest {
 		String str = FileUtils.readFileToString(file, "utf-8");
 
 		UnittestResultParser jsonParser = new UnittestResultParser();
-		int failedUnittests = jsonParser.parseXmlForFailedElements(str).getNumOfFailedTests();
+		int failedUnittests = jsonParser.parseXmlForFailedElements(str).getNumberOfFailedTests();
 		Assert.assertEquals(0, failedUnittests);
 
 	}
@@ -72,7 +72,7 @@ public class JsonParserTest {
 		String str = FileUtils.readFileToString(file, "utf-8");
 
 		AtcCheckResultParser jsonParser = new AtcCheckResultParser(true);
-		int failedAtcChecks = jsonParser.parseXmlForFailedElements(str);
+		int failedAtcChecks = jsonParser.parseXmlForFailedElements(str).getNumberOfCriticalAtcChecks();
 		Assert.assertEquals(1, failedAtcChecks);
 	}
 
@@ -83,7 +83,7 @@ public class JsonParserTest {
 		String str = FileUtils.readFileToString(file, "utf-8");
 
 		AtcCheckResultParser jsonParser = new AtcCheckResultParser(true);
-		int failedAtcChecks = jsonParser.parseXmlForFailedElements(str);
+		int failedAtcChecks = jsonParser.parseXmlForFailedElements(str).getNumberOfCriticalAtcChecks();
 		Assert.assertEquals(82, failedAtcChecks);
 	}
 
@@ -94,7 +94,7 @@ public class JsonParserTest {
 		String str = FileUtils.readFileToString(file, "utf-8");
 
 		UnittestResultParser jsonParser = new UnittestResultParser();
-		int failedUnittests = jsonParser.parseXmlForFailedElements(str).getNumOfFailedTests();
+		int failedUnittests = jsonParser.parseXmlForFailedElements(str).getNumberOfFailedTests();
 		Assert.assertEquals(0, failedUnittests);
 	}
 
@@ -105,7 +105,7 @@ public class JsonParserTest {
 		String str = FileUtils.readFileToString(file, "utf-8");
 
 		UnittestResultParser jsonParser = new UnittestResultParser();
-		int failedUnittests = jsonParser.parseXmlForFailedElements(str).getNumOfFailedTests();
+		int failedUnittests = jsonParser.parseXmlForFailedElements(str).getNumberOfFailedTests();
 		Assert.assertEquals(1, failedUnittests);
 	}
 
@@ -117,7 +117,7 @@ public class JsonParserTest {
 
 		UnittestResultParser jsonParser = new UnittestResultParser();
 		UnitTestCheckResult unitTestResult = jsonParser.parseXmlForFailedElements(str);
-		Assert.assertEquals(2, unitTestResult.getNumOfFailedTests());
+		Assert.assertEquals(2, unitTestResult.getNumberOfFailedTests());
 		Assert.assertEquals(9, unitTestResult.getMessages().size());
 	}
 
@@ -128,7 +128,7 @@ public class JsonParserTest {
 		String str = FileUtils.readFileToString(file, "utf-8");
 
 		AtcCheckResultParser jsonParser = new AtcCheckResultParser(false);
-		int failedAtcChecks = jsonParser.parseXmlForFailedElements(str);
+		int failedAtcChecks = jsonParser.parseXmlForFailedElements(str).getNumberOfCriticalAtcChecks();
 		Assert.assertEquals(28, failedAtcChecks);
 	}
 
