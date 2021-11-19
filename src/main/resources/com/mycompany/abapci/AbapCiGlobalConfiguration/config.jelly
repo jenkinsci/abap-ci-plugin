@@ -7,6 +7,11 @@
 		<f:entry title="SAP Systems">
 			<f:repeatable field="sapSystems">
 
+				<f:entry field="label"
+					title="${%Label}">
+					<f:textbox />
+				</f:entry>
+
 				<f:entry field="sapServername"
 					title="${%SAP System Hostname}">
 					<f:textbox />

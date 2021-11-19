@@ -15,6 +15,7 @@ import hudson.util.Secret;
 
 public class SAPSystem extends AbstractDescribableImpl<SAPSystem> {
 
+	private String label;
 	private String sapServername;
 	private int sapPort;
 	private String sapProtocol;
@@ -24,7 +25,7 @@ public class SAPSystem extends AbstractDescribableImpl<SAPSystem> {
 
 	@DataBoundConstructor
 	public SAPSystem(String sapServername, int sapPort, String sapProtocol, String sapMandant, String sapUsername,
-			Secret sapPassword) {
+			Secret sapPassword, String label) {
 		super();
 		this.sapServername = sapServername;
 		this.sapPort = sapPort;
@@ -32,6 +33,7 @@ public class SAPSystem extends AbstractDescribableImpl<SAPSystem> {
 		this.sapMandant = sapMandant;
 		this.sapUsername = sapUsername;
 		this.sapPassword = sapPassword;
+		this.label = label;
 	}
 
 	public String getSapServername() {
@@ -56,6 +58,14 @@ public class SAPSystem extends AbstractDescribableImpl<SAPSystem> {
 
 	public Secret getSapPassword() {
 		return sapPassword;
+	}
+
+	public String getLabel() {
+		return label;
+	}
+	
+	public String getLabelAndHost() {
+		return getLabel() + " (" + getSapProtocol() + "://" + getSapServername() + ":" + getSapPort() + ")";
 	}
 
 	@Extension
@@ -103,8 +113,20 @@ public class SAPSystem extends AbstractDescribableImpl<SAPSystem> {
 
 		public FormValidation doCheckSapServername(@QueryParameter String value) {
 			if (StringUtils.isEmpty(value)) {
+				return FormValidation.warning("Please specify the SAP server name (eg. vhcalnplci.dummy.nodomain).");
+			}
+
+			return FormValidation.ok();
+		}
+
+		public FormValidation doCheckLabel(@QueryParameter String value) {
+			if (StringUtils.isEmpty(value)) {
 				return FormValidation.warning(
-						"Please specify the SAP server name (eg. vhcalnplci.dummy.nodomain).");
+						"Please specify a label for referencing this system in steps or pipelines (word characters, no spaces).");
+			}
+			
+			if(!value.matches("\\w*")) {
+				return FormValidation.error("The SAP system label contains illegal characters.");
 			}
 
 			return FormValidation.ok();

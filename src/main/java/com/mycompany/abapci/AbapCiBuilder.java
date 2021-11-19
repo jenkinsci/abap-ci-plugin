@@ -49,10 +49,10 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 	private boolean runAtcChecks;
 	private String atcVariant;
 	private boolean treatWarningAtcChecksAsErrors;
-	private String sapSystem;
+	private String sapSystemLabel;
 
 	@DataBoundConstructor
-	public AbapCiBuilder(String abapPackagename, String atcVariant, String sapSystem) {
+	public AbapCiBuilder(String abapPackagename, String atcVariant, String sapSystemLabel) {
 		this.abapPackagename = abapPackagename;
 
 		if (atcVariant == null || atcVariant.length() == 0) {
@@ -61,7 +61,7 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 			this.atcVariant = atcVariant;
 		}
 
-		this.setSapSystem(sapSystem);
+		this.setSapSystemLabel(sapSystemLabel);
 	}
 
 	public String getAbapPackagename() {
@@ -118,13 +118,13 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 		this.treatWarningAtcChecksAsErrors = treatWarningAtcChecksAsErrors;
 	}
 
-	public String getSapSystem() {
-		return sapSystem;
+	public String getSapSystemLabel() {
+		return sapSystemLabel;
 	}
 
 	@DataBoundSetter
-	public void setSapSystem(String sapSystem) {
-		this.sapSystem = sapSystem;
+	public void setSapSystemLabel(String sapSystemLabel) {
+		this.sapSystemLabel = sapSystemLabel;
 	}
 
 	@Override
@@ -137,16 +137,16 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 			throws InterruptedException, IOException, MalformedURLException {
 
 		PrintStream logger = listener.getLogger();
-		String sapSystemFromTask = getSapSystem();
-		SAPSystem sapSystem = getSapSystemFromConfig(sapSystemFromTask);
+//		String sapSystemLabelFromTask = getSapSystemLabel();
+		SAPSystem sapSystem = getSapSystemFromConfig();
 
 		if (sapSystem == null) {
-			throw new AbortException("Could not find the configuration for SAP system " + sapSystemFromTask);
+			throw new AbortException("Could not find the configuration for SAP system " + getSapSystemLabel());
 		}
 
 		logger.println("Use Jenkins project name as the package name: " + useJenkinsProjectname);
 
-		if (!validateServerConfiguration(sapSystem)) {
+		if (!validateSapSystemConfiguration(sapSystem)) {
 			throw new AbortException("Incorrect configuration for SAP system " + sapSystem.getSapServername());
 		}
 
@@ -160,12 +160,11 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 
 		try {
 			logger.println("###########################################");
-			logger.println("# SAP system: " + sapSystem.getSapServername());
+			logger.println("# SAP system: " + sapSystem.getLabelAndHost());
 			logger.println("###########################################");
 
 			if (isRunUnitTests()) {
-				logger.println("########## Start ABAP Unit test run for SAP system " + sapSystem.getSapServername()
-						+ ":" + sapSystem.getSapPort() + ", package: " + abapPackagename + " ##########");
+				logger.println("~~~~ Start ABAP Unit test run for package: " + abapPackagename + " ~~~~");
 				logger.println("Run Unit Test flag is: " + isRunUnitTests());
 
 				IHttpPostHandler httpPostHandler = new UnittestHttpPostHandler(sapConnectionInfo, abapPackagename,
@@ -196,8 +195,7 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 			logger.println("Run ATC checks flag is: " + isRunAtcChecks());
 
 			if (isRunAtcChecks()) {
-				logger.println("########## Start ATC check run for SAP system " + sapSystem.getSapServername() + ":"
-						+ sapSystem.getSapPort() + ", package: " + abapPackagename + " ##########");
+				logger.println("~~~~ Start ATC check run for package: " + abapPackagename + " ~~~~");
 
 				IHttpPostHandler httpPostHandlerAtc = new AtcHttpPostHandler(sapConnectionInfo, abapPackagename,
 						listener, this.atcVariant);
@@ -233,7 +231,7 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 		}
 	}
 
-	private boolean validateServerConfiguration(SAPSystem sapSystem) {
+	private boolean validateSapSystemConfiguration(SAPSystem sapSystem) {
 		if (StringUtils.isEmpty(sapSystem.getSapServername())) {
 			return false;
 		}
@@ -258,13 +256,12 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 		return true;
 	}
 
-	private SAPSystem getSapSystemFromConfig(String sapSystemString) {
+	private SAPSystem getSapSystemFromConfig() {
 		AbapCiGlobalConfiguration globalConfiguration = AbapCiGlobalConfiguration.get();
-		String sapSystemFromTask = getSapSystem();
+		String sapSystemLabel = getSapSystemLabel();
 		List<SAPSystem> configuredSAPSystems = globalConfiguration.getSapSystems();
 
-		SAPSystem sapSystem = configuredSAPSystems.stream()
-				.filter(system -> sapSystemFromTask.equals(system.getSapServername() + ":" + system.getSapPort()))
+		SAPSystem sapSystem = configuredSAPSystems.stream().filter(system -> sapSystemLabel.equals(system.getLabel()))
 				.findAny().orElse(null);
 
 		return sapSystem;
@@ -283,14 +280,13 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 			return FormValidation.ok();
 		}
 
-		public ListBoxModel doFillSapSystemItems() {
+		public ListBoxModel doFillSapSystemLabelItems() {
 			ListBoxModel model = new ListBoxModel();
 			AbapCiGlobalConfiguration globalConfiguration = AbapCiGlobalConfiguration.get();
 			List<SAPSystem> sapSystems = globalConfiguration.getSapSystems();
 
 			for (SAPSystem system : sapSystems) {
-				model.add(system.getSapProtocol() + "://" + system.getSapServername() + ":" + system.getSapPort(),
-						system.getSapServername() + ":" + system.getSapPort());
+				model.add(system.getLabelAndHost(), system.getLabel());
 			}
 
 			return model;
