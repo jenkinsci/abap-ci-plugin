@@ -73,11 +73,11 @@ public class SAPSystem extends AbstractDescribableImpl<SAPSystem> {
 
 		public FormValidation doCheckSapProtocol(@QueryParameter String value) {
 			if (StringUtils.isEmpty(value)) {
-				return FormValidation.warning("Please specify the protocol (http or https).");
+				return FormValidation.error("Please specify the protocol (http or https).");
 			}
 
 			if (!"http".equals(value) || !"https".equals(value)) {
-				return FormValidation.warning("As protocol only http or https is allowed.");
+				return FormValidation.error("As protocol only http or https is allowed.");
 			}
 
 			return FormValidation.ok();
@@ -85,7 +85,7 @@ public class SAPSystem extends AbstractDescribableImpl<SAPSystem> {
 
 		public FormValidation doCheckSapUsername(@QueryParameter String value) {
 			if (StringUtils.isEmpty(value)) {
-				return FormValidation.warning("Please specify the SAP username.");
+				return FormValidation.error("Please specify the SAP username.");
 			}
 
 			return FormValidation.ok();
@@ -93,7 +93,7 @@ public class SAPSystem extends AbstractDescribableImpl<SAPSystem> {
 
 		public FormValidation doCheckSapPassword(@QueryParameter String value) {
 			if (StringUtils.isEmpty(value)) {
-				return FormValidation.warning("Please specify the password.");
+				return FormValidation.error("Please specify the password.");
 			}
 
 			return FormValidation.ok();
@@ -101,11 +101,11 @@ public class SAPSystem extends AbstractDescribableImpl<SAPSystem> {
 
 		public FormValidation doCheckSapMandant(@QueryParameter String value) {
 			if (StringUtils.isEmpty(value)) {
-				return FormValidation.warning("Please specify the SAP Client where the tests should be run.");
+				return FormValidation.error("Please specify the SAP Client where the tests should be run.");
 			}
 
 			if (!IntegerValidator.isInteger(value)) {
-				return FormValidation.warning("Only an integer is allowed as a client number.");
+				return FormValidation.error("Only an integer is allowed as a client number.");
 			}
 
 			return FormValidation.ok();
@@ -113,7 +113,7 @@ public class SAPSystem extends AbstractDescribableImpl<SAPSystem> {
 
 		public FormValidation doCheckSapServername(@QueryParameter String value) {
 			if (StringUtils.isEmpty(value)) {
-				return FormValidation.warning("Please specify the SAP server name (eg. vhcalnplci.dummy.nodomain).");
+				return FormValidation.error("Please specify the SAP server name (eg. vhcalnplci.dummy.nodomain).");
 			}
 
 			return FormValidation.ok();
@@ -121,7 +121,7 @@ public class SAPSystem extends AbstractDescribableImpl<SAPSystem> {
 
 		public FormValidation doCheckLabel(@QueryParameter String value) {
 			if (StringUtils.isEmpty(value)) {
-				return FormValidation.warning(
+				return FormValidation.error(
 						"Please specify a label for referencing this system in steps or pipelines (word characters, no spaces).");
 			}
 			
