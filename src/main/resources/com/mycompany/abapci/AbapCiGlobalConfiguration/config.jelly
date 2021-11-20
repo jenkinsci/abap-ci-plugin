@@ -4,7 +4,7 @@
 
 	<f:section title="${%AbapCi Plugin}">
 
-		<f:entry title="SAP Systems">
+		<f:entry title="SAP Systems" name="sapSystems">
 			<f:repeatable field="sapSystems">
 
 				<f:entry field="label"
