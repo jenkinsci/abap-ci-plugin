@@ -137,7 +137,6 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 			throws InterruptedException, IOException, MalformedURLException {
 
 		PrintStream logger = listener.getLogger();
-//		String sapSystemLabelFromTask = getSapSystemLabel();
 		SAPSystem sapSystem = getSapSystemFromConfig();
 
 		if (sapSystem == null) {
