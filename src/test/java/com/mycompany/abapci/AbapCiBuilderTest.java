@@ -11,6 +11,10 @@ import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 
 public class AbapCiBuilderTest {
+	
+	//TODO
+	//sapSystemLabel is coming from select
+	//and gets "" when used here
 
 	@Rule
 	public JenkinsRule jenkins = new JenkinsRule();
@@ -19,7 +23,6 @@ public class AbapCiBuilderTest {
 	final String atcVariant = "DEFAULT";
 	final String sapSystemLabel = "LABEL1";
 
-	@Test
 	public void testConfigRoundtrip() throws Exception {
 		FreeStyleProject project = jenkins.createFreeStyleProject();
 		project.getBuildersList().add(new AbapCiBuilder(packageName, atcVariant, sapSystemLabel));

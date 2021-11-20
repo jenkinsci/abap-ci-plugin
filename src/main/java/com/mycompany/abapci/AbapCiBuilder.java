@@ -61,7 +61,7 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 			this.atcVariant = atcVariant;
 		}
 
-		this.setSapSystemLabel(sapSystemLabel);
+		this.sapSystemLabel = sapSystemLabel;
 	}
 
 	public String getAbapPackagename() {
