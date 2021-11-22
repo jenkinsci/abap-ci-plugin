@@ -31,22 +31,20 @@ import hudson.util.Secret;
  */
 public class SapCredentials {
 
-    private final String _username;
-    private final Secret _password;
+	private final String _username;
+	private final Secret _password;
 
-    public SapCredentials(String username, Secret password) {
-        _username = username;
-        _password = password;
-    }
+	public SapCredentials(String username, Secret password) {
+		_username = username;
+		_password = password;
+	}
 
-    String GetUsername() {
-        return _username;
-    }
+	String GetUsername() {
+		return _username;
+	}
 
-
-    Secret GetPassword() {
-        return _password;
-    }
-
+	Secret GetPassword() {
+		return _password;
+	}
 
 }

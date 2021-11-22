@@ -33,6 +33,8 @@ import org.apache.http.HttpResponse;
  */
 public interface IHttpPostHandler {
 
-    public HttpResponse execute() throws MalformedURLException, IOException;
-    public HttpResponse executeWithToken() throws MalformedURLException, IOException, HttpCsrfTokenOrCookieCouldNotBeRetrievedException;
+	public HttpResponse execute() throws MalformedURLException, IOException;
+
+	public HttpResponse executeWithToken()
+			throws MalformedURLException, IOException, HttpCsrfTokenOrCookieCouldNotBeRetrievedException;
 }

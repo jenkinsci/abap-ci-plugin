@@ -1,9 +1,11 @@
 package com.mycompany.abapci;
 
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.MalformedURLException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 
@@ -21,9 +23,10 @@ import com.mycompany.abapci.AdtCommunication.SapConnectionInfo;
 import com.mycompany.abapci.AdtCommunication.SapCredentials;
 import com.mycompany.abapci.AdtCommunication.SapServerInfo;
 import com.mycompany.abapci.AdtCommunication.UnittestHttpPostHandler;
-import com.mycompany.resultParser.AtcCheckResultParser;
-import com.mycompany.resultParser.UnitTestResult;
-import com.mycompany.resultParser.UnittestResultParser;
+import com.mycompany.result.AtcCheckResult;
+import com.mycompany.result.AtcCheckResultParser;
+import com.mycompany.result.UnitTestCheckResult;
+import com.mycompany.result.UnittestResultParser;
 
 import hudson.AbortException;
 import hudson.Extension;
@@ -35,7 +38,7 @@ import hudson.model.TaskListener;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.Builder;
 import hudson.util.FormValidation;
-import hudson.util.Secret;
+import hudson.util.ListBoxModel;
 import jenkins.tasks.SimpleBuildStep;
 
 public class AbapCiBuilder extends Builder implements SimpleBuildStep {
@@ -46,16 +49,19 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 	private boolean runAtcChecks;
 	private String atcVariant;
 	private boolean treatWarningAtcChecksAsErrors;
+	private String sapSystemLabel;
 
 	@DataBoundConstructor
-	public AbapCiBuilder(String abapPackagename, String atcVariant) {
+	public AbapCiBuilder(String abapPackagename, String atcVariant, String sapSystemLabel) {
 		this.abapPackagename = abapPackagename;
-		
-		if(atcVariant == null || atcVariant.length() == 0) {
+
+		if (atcVariant == null || atcVariant.length() == 0) {
 			this.atcVariant = "DEFAULT";
 		} else {
 			this.atcVariant = atcVariant;
 		}
+
+		this.sapSystemLabel = sapSystemLabel;
 	}
 
 	public String getAbapPackagename() {
@@ -102,133 +108,187 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 	public void setAtcVariant(String variant) {
 		this.atcVariant = variant;
 	}
-	
+
 	public boolean getTreatWarningAtcChecksAsErrors() {
 		return treatWarningAtcChecksAsErrors;
 	}
-	
+
 	@DataBoundSetter
 	public void setTreatWarningAtcChecksAsErrors(boolean treatWarningAtcChecksAsErrors) {
 		this.treatWarningAtcChecksAsErrors = treatWarningAtcChecksAsErrors;
+	}
+
+	public String getSapSystemLabel() {
+		return sapSystemLabel;
+	}
+
+	@DataBoundSetter
+	public void setSapSystemLabel(String sapSystemLabel) {
+		this.sapSystemLabel = sapSystemLabel;
+	}
+
+	@Override
+	public DescriptorImpl getDescriptor() {
+		return (DescriptorImpl) super.getDescriptor();
 	}
 
 	@Override
 	public void perform(Run<?, ?> run, FilePath workspace, Launcher launcher, TaskListener listener)
 			throws InterruptedException, IOException, MalformedURLException {
 
+		PrintStream logger = listener.getLogger();
+		SAPSystem sapSystem = getSapSystemFromConfig();
+
+		if (sapSystem == null) {
+			throw new AbortException("Could not find the configuration for SAP system " + getSapSystemLabel());
+		}
+
+		logger.println("Use Jenkins project name as the package name: " + useJenkinsProjectname);
+
+		if (!validateSapSystemConfiguration(sapSystem)) {
+			throw new AbortException("Incorrect configuration for SAP system " + sapSystem.getSapServername());
+		}
+
 		int numFailedUnitTests = -1;
 		int numCriticalAtcChecks = -1;
 
-		AbapCiGlobalConfiguration globalConfiguration = AbapCiGlobalConfiguration.get();
-		boolean globalConfigurationIsValid = ValidateGlobalConfiguration(globalConfiguration);
+		SapCredentials sapCredentials = new SapCredentials(sapSystem.getSapUsername(), sapSystem.getSapPassword());
+		SapServerInfo sapServerInfo = new SapServerInfo(sapSystem.getSapProtocol(), sapSystem.getSapServername(),
+				sapSystem.getSapPort(), sapSystem.getSapMandant());
+		SapConnectionInfo sapConnectionInfo = new SapConnectionInfo(sapServerInfo, sapCredentials);
 
-		if (globalConfigurationIsValid) {
-			listener.getLogger().println("Use jenkins project name as package name: " + useJenkinsProjectname + "!");
+		try {
+			logger.println("###########################################");
+			logger.println("# SAP system: " + sapSystem.getLabelAndHost());
+			logger.println("###########################################");
 
-			String username = globalConfiguration.getSapUsername();
-			Secret password = globalConfiguration.getSapPassword();
-			SapCredentials sapCredentials = new SapCredentials(username, password);
-			SapServerInfo sapServerInfo = new SapServerInfo(globalConfiguration.getSapProtocol(),
-					globalConfiguration.getSapServername(), globalConfiguration.getSapPort(),
-					globalConfiguration.getSapMandant());
-			SapConnectionInfo sapConnectionInfo = new SapConnectionInfo(sapServerInfo, sapCredentials);
+			if (isRunUnitTests()) {
+				logger.println("~~~~ Start ABAP Unit test run for package: " + abapPackagename + " ~~~~");
+				logger.println("Run Unit Test flag is: " + isRunUnitTests());
 
-			try {
-				listener.getLogger().println("Run Unit Test flag is: " + isRunUnitTests());
+				IHttpPostHandler httpPostHandler = new UnittestHttpPostHandler(sapConnectionInfo, abapPackagename,
+						listener);
+				HttpResponse response = httpPostHandler.executeWithToken();
+				logger.println("Response status code of unit test run: " + response.getStatusLine().getStatusCode());
 
-				if (isRunUnitTests()) {
-					listener.getLogger()
-							.println("########## Start ABAP Unit testrun for SAP packagename: " + abapPackagename + "! ##########");
+				if (response.getStatusLine().getStatusCode() == 200) {
+					String responseContent = EntityUtils.toString(response.getEntity(), "UTF-8");
+					UnittestResultParser jsonParser = new UnittestResultParser();
+					UnitTestCheckResult unitTestResult = jsonParser.parseXmlForFailedElements(responseContent);
 
-					IHttpPostHandler httpPostHandler = new UnittestHttpPostHandler(sapConnectionInfo, abapPackagename,
-							listener);
-					HttpResponse response = httpPostHandler.executeWithToken();
-					listener.getLogger().println(
-							"Response statuscode of unit testrun: " + response.getStatusLine().getStatusCode());
-
-					if (response.getStatusLine().getStatusCode() == 200) {
-						String responseContent = EntityUtils.toString(response.getEntity(), "UTF-8");
-						// listener.getLogger().println("Response content of unit testrun: " +
-						// responseContent);
-						UnittestResultParser jsonParser = new UnittestResultParser();
-						UnitTestResult unitTestResult = jsonParser.parseXmlForFailedElements(responseContent);
-
-						if (unitTestResult.getMessages().size() > 0) {
-							listener.getLogger().println("---------------------------");
-						}
-
-						unitTestResult.getMessages().forEach(item -> {
-							String message = (String) item;
-							listener.getLogger().println(message);
-						});
-
-						numFailedUnitTests = unitTestResult.getNumOfFailedTests();
-
-						listener.getLogger().println("Number of failed unittests: " + numFailedUnitTests);
-
+					if (unitTestResult.getMessages().size() > 0) {
+						logger.println("---------------------------");
 					}
+
+					unitTestResult.getMessages().forEach(item -> {
+						String message = (String) item;
+						logger.println(message);
+					});
+
+					numFailedUnitTests = unitTestResult.getNumberOfFailedTests();
+
+					logger.println("Number of failed unit tests: " + numFailedUnitTests);
 				}
+			}
 
-				listener.getLogger().println("Run ATC checks flag is: " + isRunAtcChecks());
+			logger.println("Run ATC checks flag is: " + isRunAtcChecks());
 
-				if (isRunAtcChecks()) {
-					listener.getLogger().println("########## Start ATC checkrun for SAP packagename: " + abapPackagename + "! ##########");
+			if (isRunAtcChecks()) {
+				logger.println("~~~~ Start ATC check run for package: " + abapPackagename + " ~~~~");
 
-					IHttpPostHandler httpPostHandlerAtc = new AtcHttpPostHandler(sapConnectionInfo, abapPackagename,
-							listener, this.atcVariant);
-					HttpResponse atcResponse = httpPostHandlerAtc.executeWithToken();
-					listener.getLogger()
-							.println("Response statuscode of atc run: " + atcResponse.getStatusLine().getStatusCode());
+				IHttpPostHandler httpPostHandlerAtc = new AtcHttpPostHandler(sapConnectionInfo, abapPackagename,
+						listener, this.atcVariant);
+				HttpResponse atcResponse = httpPostHandlerAtc.executeWithToken();
+				logger.println("Response status code of the ATC run: " + atcResponse.getStatusLine().getStatusCode());
 
-					if (atcResponse.getStatusLine().getStatusCode() == 200) {
-						String responseContent = EntityUtils.toString(atcResponse.getEntity(), "UTF-8");
-						//listener.getLogger().println("Response content of Ã�TC checks: " + responseContent);
-						AtcCheckResultParser jsonParser = new AtcCheckResultParser(this.treatWarningAtcChecksAsErrors);
-						numCriticalAtcChecks = jsonParser.parseXmlForFailedElements(responseContent);
-						listener.getLogger().println("Number of failed ATC checks: " + numCriticalAtcChecks);
-					}
+				if (atcResponse.getStatusLine().getStatusCode() == 200) {
+					String responseContent = EntityUtils.toString(atcResponse.getEntity(), "UTF-8");
+					AtcCheckResultParser jsonParser = new AtcCheckResultParser(this.treatWarningAtcChecksAsErrors);
+					AtcCheckResult atcCheckResult = jsonParser.parseXmlForFailedElements(responseContent);
+					numCriticalAtcChecks = atcCheckResult.getNumberOfCriticalAtcChecks();
+					logger.println("Number of failed ATC checks: " + numCriticalAtcChecks);
 				}
-			} catch (RuntimeException rex) {
-				throw rex;
-			} catch (Exception e) {
-				StringWriter sw = new StringWriter();
-				e.printStackTrace(new PrintWriter(sw));
-				listener.getLogger().println("Http Call failed, exception message: " + e.getMessage());
-				listener.getLogger().println("Http Call failed, exception stacktrace: " + sw.toString());
-				throw new InterruptedException();
 			}
+		} catch (Exception e) {
+			StringWriter sw = new StringWriter();
+			e.printStackTrace(new PrintWriter(sw));
+			logger.println("Http call failed, exception message: " + e.getMessage());
+			logger.println("Http call failed, exception stacktrace: " + sw.toString());
+			throw new InterruptedException();
+		}
 
-			if (numFailedUnitTests > 0 && numCriticalAtcChecks > 0) {
-				throw new AbortException("Failed unit tests and ATC checks");
-			}
+		if (numFailedUnitTests > 0 && numCriticalAtcChecks > 0) {
+			throw new AbortException("~~~~ Failed unit tests and ATC checks ~~~~");
+		}
 
-			if (numFailedUnitTests > 0) {
-				throw new AbortException("Failed unit tests");
-			}
+		if (numFailedUnitTests > 0) {
+			throw new AbortException("~~~~ Failed unit tests ~~~~");
+		}
 
-			if (numCriticalAtcChecks > 0) {
-				throw new AbortException("Failed ATC checks");
-			}
-
+		if (numCriticalAtcChecks > 0) {
+			throw new AbortException("~~~~ Failed ATC checks ~~~~");
 		}
 	}
 
-	private boolean ValidateGlobalConfiguration(AbapCiGlobalConfiguration globalConfiguration) {
-		boolean servernameIsSet = !StringUtils.isEmpty(globalConfiguration.getSapServername());
-		// TODO
-		return servernameIsSet;
+	private boolean validateSapSystemConfiguration(SAPSystem sapSystem) {
+		if (StringUtils.isEmpty(sapSystem.getSapServername())) {
+			return false;
+		}
+		;
+
+		if (StringUtils.isEmpty(sapSystem.getSapMandant())) {
+			return false;
+		}
+
+		if (StringUtils.isEmpty(sapSystem.getSapProtocol())) {
+			return false;
+		}
+
+		if (StringUtils.isEmpty(sapSystem.getSapUsername())) {
+			return false;
+		}
+
+		if (sapSystem.getSapPort() == 0) {
+			return false;
+		}
+
+		return true;
+	}
+
+	private SAPSystem getSapSystemFromConfig() {
+		AbapCiGlobalConfiguration globalConfiguration = AbapCiGlobalConfiguration.get();
+		String sapSystemLabel = getSapSystemLabel();
+		List<SAPSystem> configuredSAPSystems = globalConfiguration.getSapSystems();
+
+		SAPSystem sapSystem = configuredSAPSystems.stream().filter(system -> sapSystemLabel.equals(system.getLabel()))
+				.findAny().orElse(null);
+
+		return sapSystem;
 	}
 
 	@Symbol("abapCi")
 	@Extension
 	public static final class DescriptorImpl extends BuildStepDescriptor<Builder> {
 
-		public FormValidation doCheckName(@QueryParameter String value) throws IOException, ServletException {
+		public FormValidation doCheckAbapPackagename(@QueryParameter String value)
+				throws IOException, ServletException {
 			if (value.length() == 0) {
 				return FormValidation.error("Please set a package name");
 			}
 
 			return FormValidation.ok();
+		}
+
+		public ListBoxModel doFillSapSystemLabelItems() {
+			ListBoxModel model = new ListBoxModel();
+			AbapCiGlobalConfiguration globalConfiguration = AbapCiGlobalConfiguration.get();
+			List<SAPSystem> sapSystems = globalConfiguration.getSapSystems();
+
+			for (SAPSystem system : sapSystems) {
+				model.add(system.getLabelAndHost(), system.getLabel());
+			}
+
+			return model;
 		}
 
 		@Override
@@ -240,7 +300,5 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 		public String getDisplayName() {
 			return "ABAP Continuous Integration Plugin";
 		}
-
 	}
-
 }

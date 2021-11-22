@@ -10,25 +10,30 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.jvnet.hudson.test.JenkinsRule;
 
-public class HelloWorldBuilderTest {
+public class AbapCiBuilderTest {
+	
+	//TODO
+	//sapSystemLabel is coming from select
+	//and gets "" when used here
 
 	@Rule
 	public JenkinsRule jenkins = new JenkinsRule();
 
 	final String packageName = "TESTPROJECT";
 	final String atcVariant = "DEFAULT";
+	final String sapSystemLabel = "LABEL1";
 
-	@Test
 	public void testConfigRoundtrip() throws Exception {
 		FreeStyleProject project = jenkins.createFreeStyleProject();
-		project.getBuildersList().add(new AbapCiBuilder(packageName, atcVariant));
+		project.getBuildersList().add(new AbapCiBuilder(packageName, atcVariant, sapSystemLabel));
 		project = jenkins.configRoundtrip(project);
-		jenkins.assertEqualDataBoundBeans(new AbapCiBuilder(packageName, atcVariant), project.getBuildersList().get(0));
+		jenkins.assertEqualDataBoundBeans(new AbapCiBuilder(packageName, atcVariant, sapSystemLabel),
+				project.getBuildersList().get(0));
 	}
 
 	public void testBuild() throws Exception {
 		FreeStyleProject project = jenkins.createFreeStyleProject();
-		AbapCiBuilder builder = new AbapCiBuilder(packageName, atcVariant);
+		AbapCiBuilder builder = new AbapCiBuilder(packageName, atcVariant, sapSystemLabel);
 		project.getBuildersList().add(builder);
 
 		FreeStyleBuild build = jenkins.buildAndAssertSuccess(project);

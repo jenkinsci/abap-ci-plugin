@@ -125,5 +125,4 @@ public abstract class AHttpPostHandler implements IHttpPostHandler {
 			}
 		}
 	}
-
 }

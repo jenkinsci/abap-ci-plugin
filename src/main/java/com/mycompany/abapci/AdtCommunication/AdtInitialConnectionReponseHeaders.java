@@ -31,25 +31,24 @@ import org.apache.http.Header;
  */
 public class AdtInitialConnectionReponseHeaders {
 
-    private final Header _tokenHeader;
-    private final Header[] _cookieHeaders;
+	private final Header _tokenHeader;
+	private final Header[] _cookieHeaders;
 
-    AdtInitialConnectionReponseHeaders(Header tokenHeader, Header[] cookieHeaders) {
-        _tokenHeader = tokenHeader; 
-        _cookieHeaders = cookieHeaders; 
-    }
+	AdtInitialConnectionReponseHeaders(Header tokenHeader, Header[] cookieHeaders) {
+		_tokenHeader = tokenHeader;
+		_cookieHeaders = cookieHeaders;
+	}
 
-    String getToken() {
-        return _tokenHeader.getValue(); 
-    }
+	String getToken() {
+		return _tokenHeader.getValue();
+	}
 
-    Header[] getCookieHeaders() {
-        return _cookieHeaders; 
-    }
-    
-    boolean isValid() 
-    {
-        return _tokenHeader != null && _cookieHeaders != null; 
-    }
-    
+	Header[] getCookieHeaders() {
+		return _cookieHeaders;
+	}
+
+	boolean isValid() {
+		return _tokenHeader != null && _cookieHeaders != null;
+	}
+
 }

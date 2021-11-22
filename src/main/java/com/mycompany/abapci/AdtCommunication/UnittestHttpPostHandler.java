@@ -40,64 +40,63 @@ import org.apache.http.impl.client.DefaultHttpClient;
  */
 public class UnittestHttpPostHandler extends AHttpPostHandler {
 
-    public UnittestHttpPostHandler(SapConnectionInfo sapConnectionInfo, String sapPackageName, TaskListener listener) {
-        super(sapConnectionInfo, sapPackageName, listener);
-    }
+	public UnittestHttpPostHandler(SapConnectionInfo sapConnectionInfo, String sapPackageName, TaskListener listener) {
+		super(sapConnectionInfo, sapPackageName, listener);
+	}
 
-    @Override
-    protected HttpResponse postRequest(AdtInitialConnectionReponseHeaders adtInitialConnectionResponseHeaders) throws MalformedURLException, IOException {
-        HttpClient httpclient = new DefaultHttpClient();
+	@Override
+	protected HttpResponse postRequest(AdtInitialConnectionReponseHeaders adtInitialConnectionResponseHeaders)
+			throws MalformedURLException, IOException {
+		HttpClient httpclient = new DefaultHttpClient();
 
-        String url = BuildHttpUrl(GetMainUrlTarget());
+		String url = BuildHttpUrl(GetMainUrlTarget());
 
-        
-        HttpPost httppost = new HttpPost(url);
-        AddHeaderForHttpPostRequest(httppost, adtInitialConnectionResponseHeaders);
+		HttpPost httppost = new HttpPost(url);
+		AddHeaderForHttpPostRequest(httppost, adtInitialConnectionResponseHeaders);
 
-        String postMessage = GetPostMessage();
+		String postMessage = GetPostMessage();
 
-        httppost.setEntity(new ByteArrayEntity(
-                postMessage.getBytes("UTF8")));
+		httppost.setEntity(new ByteArrayEntity(postMessage.getBytes("UTF8")));
 
-        return httpclient.execute(httppost);
-    }
+		return httpclient.execute(httppost);
+	}
 
-    @Override
-    String GetMainUrlTarget() {
-        return "/sap/bc/adt/abapunit/testruns";
-    }
+	@Override
+	String GetMainUrlTarget() {
+		return "/sap/bc/adt/abapunit/testruns";
+	}
 
-    @Override
-    String GetTokenUrlTarget() {
-        return GetMainUrlTarget();
-    }
+	@Override
+	String GetTokenUrlTarget() {
+		return GetMainUrlTarget();
+	}
 
-    @Override
-    String GetPostMessage() throws IOException {
-        //File file = new File(classLoader.getResource("unittestRequestMessage.xml").getFile());
-        //String postMessage = FileUtils.readFileToString(file, "utf-8");
-        String postMessage = GetRequestMessageXml(); 
-        postMessage = postMessage.replace("{sapPackageName}", _sapPackageName);
+	@Override
+	String GetPostMessage() throws IOException {
+		// File file = new
+		// File(classLoader.getResource("unittestRequestMessage.xml").getFile());
+		// String postMessage = FileUtils.readFileToString(file, "utf-8");
+		String postMessage = GetRequestMessageXml();
+		postMessage = postMessage.replace("{sapPackageName}", _sapPackageName);
 
-        return postMessage;
-    }
-    
-    private String GetRequestMessageXml() 
-    {
-        //TODO load content from file, this does not work with the maven released hpi package 
-        //ClassLoader classLoader = UnittestHttpPostHandler.class.getClassLoader(); 
-        //File file = new File(classLoader.getResource("unittestRequestMessage.xml").getFile());
-        //String postMessage = FileUtils.readFileToString(file, "utf-8");
-        return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" 
-        + "<aunit:runConfiguration xmlns:aunit=\"http://www.sap.com/adt/aunit\">"
-        + "<external><coverage active=\"false\"/></external>"
-        + "<adtcore:objectSets xmlns:adtcore=\"http://www.sap.com/adt/core\">"
-        + "<objectSet kind=\"inclusive\"><adtcore:objectReferences><adtcore:objectReference adtcore:uri=\"/sap/bc/adt/vit/wb/object_type/devck/object_name/{sapPackageName}\"/>"
-        + "</adtcore:objectReferences>"
-        + "</objectSet>"
-        + "</adtcore:objectSets>"
-        + "</aunit:runConfiguration>"; 
+		return postMessage;
+	}
 
-    }
+	private String GetRequestMessageXml() {
+		// TODO load content from file, this does not work with the maven released hpi
+		// package
+		// ClassLoader classLoader = UnittestHttpPostHandler.class.getClassLoader();
+		// File file = new
+		// File(classLoader.getResource("unittestRequestMessage.xml").getFile());
+		// String postMessage = FileUtils.readFileToString(file, "utf-8");
+		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+				+ "<aunit:runConfiguration xmlns:aunit=\"http://www.sap.com/adt/aunit\">"
+				+ "<external><coverage active=\"false\"/></external>"
+				+ "<adtcore:objectSets xmlns:adtcore=\"http://www.sap.com/adt/core\">"
+				+ "<objectSet kind=\"inclusive\"><adtcore:objectReferences><adtcore:objectReference adtcore:uri=\"/sap/bc/adt/vit/wb/object_type/devck/object_name/{sapPackageName}\"/>"
+				+ "</adtcore:objectReferences>" + "</objectSet>" + "</adtcore:objectSets>"
+				+ "</aunit:runConfiguration>";
+
+	}
 
 }

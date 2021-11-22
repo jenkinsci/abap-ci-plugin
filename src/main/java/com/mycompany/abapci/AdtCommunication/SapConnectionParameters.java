@@ -28,5 +28,5 @@ package com.mycompany.abapci.AdtCommunication;
  * @author Andreas Gautsch
  */
 class SapConnectionParameters {
-    
+
 }

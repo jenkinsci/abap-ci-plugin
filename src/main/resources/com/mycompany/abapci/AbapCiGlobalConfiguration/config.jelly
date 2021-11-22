@@ -1,29 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?jelly escape-by-default='true'?>
 <j:jelly xmlns:j="jelly:core" xmlns:f="/lib/form">
-    <f:section title="${%AbapCi Plugin}">
-        <f:entry field="sapServername" title="${%ABAP Servername}">
-            <f:textbox/>
-        </f:entry>
-        <f:entry field="sapPort" title="${%Port of ABAP Server}">
-            <f:number/>
-        </f:entry>
-        <f:entry field="sapProtocol" title="${%Protocol (http or https)}">
-            <select name="sapProtocol">
-                <option value="http">http</option>
-                <option value="https">https</option>                
-            </select> 
-        </f:entry>
-       
-        <f:entry field="sapMandant" title="${%Client}">
-            <f:textbox/>
-        </f:entry>
-        <f:entry field="sapUsername" title="${%Username}">
-            <f:textbox/>
-        </f:entry>
-        <f:entry field="sapPassword" title="${%Password}">
-            <f:password/>
-        </f:entry>
 
-    </f:section>
+	<f:section title="${%AbapCi Plugin}">
+
+		<f:entry title="SAP Systems" name="sapSystems">
+			<f:repeatable field="sapSystems">
+
+				<f:entry field="label"
+					title="${%Label}">
+					<f:textbox />
+				</f:entry>
+
+				<f:entry field="sapServername"
+					title="${%SAP System Hostname}">
+					<f:textbox />
+				</f:entry>
+
+				<f:entry field="sapProtocol"
+					title="${%Protocol (http or https)}">
+					<select name="sapProtocol">
+						<option value="http"
+							selected="${instance.sapProtocol.equals('http')? 'true':null}">http</option>
+						<option value="https"
+							selected="${instance.sapProtocol.equals('https')? 'true':null}">https</option>
+					</select>
+				</f:entry>
+
+				<f:entry field="sapPort" title="${%Port (http or https)}">
+					<f:number />
+				</f:entry>
+
+				<f:entry field="sapMandant" title="${%Client}">
+					<f:textbox />
+				</f:entry>
+
+
+				<f:entry field="sapUsername" title="${%Username}">
+					<f:textbox />
+				</f:entry>
+
+				<f:entry field="sapPassword" title="${%Password}">
+					<f:password />
+				</f:entry>
+
+				<f:entry title="">
+					<div align="right">
+						<f:repeatableDeleteButton />
+					</div>
+				</f:entry>
+			</f:repeatable>
+		</f:entry>
+	</f:section>
 </j:jelly>
