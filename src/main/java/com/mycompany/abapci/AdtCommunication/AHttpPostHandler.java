@@ -23,18 +23,19 @@
  */
 package com.mycompany.abapci.AdtCommunication;
 
-import hudson.Launcher;
-import hudson.model.TaskListener;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.util.Base64;
+
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import hudson.model.TaskListener;
 
 /**
  *
@@ -84,14 +85,14 @@ public abstract class AHttpPostHandler implements IHttpPostHandler {
 		HttpClient httpclient = new DefaultHttpClient();
 		String url = BuildHttpUrl(GetTokenUrlTarget());
 
-		_listener.getLogger().println("ConnectionResponseHeader Token Url: " + url);
+		// _listener.getLogger().println("ConnectionResponseHeader Token Url: " + url);
 		HttpGet httpget = new HttpGet(url);
 
 		httpget.setHeader("Authorization", "Basic " + EncodeCredentials());
 		httpget.setHeader("x-csrf-token", "fetch");
 		HttpResponse res = httpclient.execute(httpget);
-		_listener.getLogger()
-				.println("ConnectionResponseHeader Token StatusCode: " + res.getStatusLine().getStatusCode());
+//		_listener.getLogger()
+//				.println("ConnectionResponseHeader Token StatusCode: " + res.getStatusLine().getStatusCode());
 		Header tokenHeader = res.getFirstHeader("x-csrf-token");
 		Header[] cookieHeaders = res.getHeaders("set-Cookie");
 

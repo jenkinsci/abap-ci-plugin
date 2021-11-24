@@ -48,7 +48,7 @@ public class JsonParserTest {
 				+ "<alerts/>" + "<testClasses/>" + "</program>" + "</aunit:runResult>";
 
 		UnittestResultParser jsonParser = new UnittestResultParser();
-		int failedUnittests = jsonParser.parseXmlForFailedElements(testresult).getNumberOfFailedTests();
+		int failedUnittests = jsonParser.parseUnitTestResult(testresult).getNumberOfFailedTests();
 		Assert.assertEquals(0, failedUnittests);
 
 	}
@@ -60,7 +60,7 @@ public class JsonParserTest {
 		String str = FileUtils.readFileToString(file, "utf-8");
 
 		UnittestResultParser jsonParser = new UnittestResultParser();
-		int failedUnittests = jsonParser.parseXmlForFailedElements(str).getNumberOfFailedTests();
+		int failedUnittests = jsonParser.parseUnitTestResult(str).getNumberOfFailedTests();
 		Assert.assertEquals(0, failedUnittests);
 
 	}
@@ -94,7 +94,7 @@ public class JsonParserTest {
 		String str = FileUtils.readFileToString(file, "utf-8");
 
 		UnittestResultParser jsonParser = new UnittestResultParser();
-		int failedUnittests = jsonParser.parseXmlForFailedElements(str).getNumberOfFailedTests();
+		int failedUnittests = jsonParser.parseUnitTestResult(str).getNumberOfFailedTests();
 		Assert.assertEquals(0, failedUnittests);
 	}
 
@@ -105,7 +105,7 @@ public class JsonParserTest {
 		String str = FileUtils.readFileToString(file, "utf-8");
 
 		UnittestResultParser jsonParser = new UnittestResultParser();
-		int failedUnittests = jsonParser.parseXmlForFailedElements(str).getNumberOfFailedTests();
+		int failedUnittests = jsonParser.parseUnitTestResult(str).getNumberOfFailedTests();
 		Assert.assertEquals(1, failedUnittests);
 	}
 
@@ -116,7 +116,7 @@ public class JsonParserTest {
 		String str = FileUtils.readFileToString(file, "utf-8");
 
 		UnittestResultParser jsonParser = new UnittestResultParser();
-		UnitTestCheckResult unitTestResult = jsonParser.parseXmlForFailedElements(str);
+		UnitTestCheckResult unitTestResult = jsonParser.parseUnitTestResult(str);
 		Assert.assertEquals(2, unitTestResult.getNumberOfFailedTests());
 		Assert.assertEquals(9, unitTestResult.getMessages().size());
 	}

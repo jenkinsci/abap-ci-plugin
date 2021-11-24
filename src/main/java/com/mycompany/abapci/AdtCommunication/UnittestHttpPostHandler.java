@@ -23,25 +23,28 @@
  */
 package com.mycompany.abapci.AdtCommunication;
 
-import hudson.model.TaskListener;
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import org.apache.commons.io.FileUtils;
+
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
+import hudson.model.TaskListener;
+
 /**
  *
  * @author Andreas Gautsch
  */
 public class UnittestHttpPostHandler extends AHttpPostHandler {
+	private boolean withCoverage;
 
-	public UnittestHttpPostHandler(SapConnectionInfo sapConnectionInfo, String sapPackageName, TaskListener listener) {
+	public UnittestHttpPostHandler(SapConnectionInfo sapConnectionInfo, String sapPackageName, boolean withCoverage,
+			TaskListener listener) {
 		super(sapConnectionInfo, sapPackageName, listener);
+		this.withCoverage = withCoverage;
 	}
 
 	@Override
@@ -53,9 +56,7 @@ public class UnittestHttpPostHandler extends AHttpPostHandler {
 
 		HttpPost httppost = new HttpPost(url);
 		AddHeaderForHttpPostRequest(httppost, adtInitialConnectionResponseHeaders);
-
 		String postMessage = GetPostMessage();
-
 		httppost.setEntity(new ByteArrayEntity(postMessage.getBytes("UTF8")));
 
 		return httpclient.execute(httppost);
@@ -77,7 +78,9 @@ public class UnittestHttpPostHandler extends AHttpPostHandler {
 		// File(classLoader.getResource("unittestRequestMessage.xml").getFile());
 		// String postMessage = FileUtils.readFileToString(file, "utf-8");
 		String postMessage = GetRequestMessageXml();
-		postMessage = postMessage.replace("{sapPackageName}", _sapPackageName);
+		
+		postMessage = postMessage.replace("{sapPackageName}", _sapPackageName).replace("{withCoverage}",
+				this.withCoverage ? "true" : "false");
 
 		return postMessage;
 	}
@@ -91,12 +94,11 @@ public class UnittestHttpPostHandler extends AHttpPostHandler {
 		// String postMessage = FileUtils.readFileToString(file, "utf-8");
 		return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
 				+ "<aunit:runConfiguration xmlns:aunit=\"http://www.sap.com/adt/aunit\">"
-				+ "<external><coverage active=\"false\"/></external>"
+				+ "<external><coverage active=\"{withCoverage}\"/></external>"
 				+ "<adtcore:objectSets xmlns:adtcore=\"http://www.sap.com/adt/core\">"
 				+ "<objectSet kind=\"inclusive\"><adtcore:objectReferences><adtcore:objectReference adtcore:uri=\"/sap/bc/adt/vit/wb/object_type/devck/object_name/{sapPackageName}\"/>"
 				+ "</adtcore:objectReferences>" + "</objectSet>" + "</adtcore:objectSets>"
 				+ "</aunit:runConfiguration>";
 
 	}
-
 }
