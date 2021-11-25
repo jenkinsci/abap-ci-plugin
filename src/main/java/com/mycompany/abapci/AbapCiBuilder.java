@@ -18,6 +18,7 @@ import org.kohsuke.stapler.DataBoundSetter;
 import org.kohsuke.stapler.QueryParameter;
 
 import com.mycompany.abapci.AdtCommunication.AtcHttpPostHandler;
+import com.mycompany.abapci.AdtCommunication.CoverageHttpPostHandler;
 import com.mycompany.abapci.AdtCommunication.IHttpPostHandler;
 import com.mycompany.abapci.AdtCommunication.SapConnectionInfo;
 import com.mycompany.abapci.AdtCommunication.SapCredentials;
@@ -25,6 +26,8 @@ import com.mycompany.abapci.AdtCommunication.SapServerInfo;
 import com.mycompany.abapci.AdtCommunication.UnittestHttpPostHandler;
 import com.mycompany.result.AtcCheckResult;
 import com.mycompany.result.AtcCheckResultParser;
+import com.mycompany.result.CoverageResult;
+import com.mycompany.result.CoverageResultParser;
 import com.mycompany.result.UnitTestCheckResult;
 import com.mycompany.result.UnittestResultParser;
 
@@ -47,6 +50,7 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 	private boolean useJenkinsProjectname;
 	private boolean runUnitTests;
 	private boolean runAtcChecks;
+	private boolean withCoverage;
 	private String atcVariant;
 	private boolean treatWarningAtcChecksAsErrors;
 	private String sapSystemLabel;
@@ -98,6 +102,15 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 	@DataBoundSetter
 	public void setRunAtcChecks(boolean runAtcChecks) {
 		this.runAtcChecks = runAtcChecks;
+	}
+
+	public boolean isWithCoverage() {
+		return withCoverage;
+	}
+
+	@DataBoundSetter
+	public void setWithCoverage(boolean withCoverage) {
+		this.withCoverage = withCoverage;
 	}
 
 	public String getAtcVariant() {
@@ -161,20 +174,22 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 			logger.println("###########################################");
 			logger.println("# SAP system: " + sapSystem.getLabelAndHost());
 			logger.println("###########################################");
+			logger.println("Run Unit Test flag is: " + isRunUnitTests());
+			logger.println("With coverage flag is: " + isWithCoverage());
 
 			if (isRunUnitTests()) {
 				logger.println("~~~~ Start ABAP Unit test run for package: " + abapPackagename + " ~~~~");
-				logger.println("Run Unit Test flag is: " + isRunUnitTests());
 
 				IHttpPostHandler httpPostHandler = new UnittestHttpPostHandler(sapConnectionInfo, abapPackagename,
-						listener);
+						withCoverage, listener);
 				HttpResponse response = httpPostHandler.executeWithToken();
-				logger.println("Response status code of unit test run: " + response.getStatusLine().getStatusCode());
+				// logger.println("Response status code of unit test run: " +
+				// response.getStatusLine().getStatusCode());
 
 				if (response.getStatusLine().getStatusCode() == 200) {
 					String responseContent = EntityUtils.toString(response.getEntity(), "UTF-8");
 					UnittestResultParser jsonParser = new UnittestResultParser();
-					UnitTestCheckResult unitTestResult = jsonParser.parseXmlForFailedElements(responseContent);
+					UnitTestCheckResult unitTestResult = jsonParser.parseUnitTestResult(responseContent);
 
 					if (unitTestResult.getMessages().size() > 0) {
 						logger.println("---------------------------");
@@ -186,8 +201,30 @@ public class AbapCiBuilder extends Builder implements SimpleBuildStep {
 					});
 
 					numFailedUnitTests = unitTestResult.getNumberOfFailedTests();
-
 					logger.println("Number of failed unit tests: " + numFailedUnitTests);
+
+					if (isWithCoverage()) {
+						if (unitTestResult.hasCoverageResult()) {
+							CoverageHttpPostHandler coveragePostHandler = new CoverageHttpPostHandler(sapConnectionInfo,
+									abapPackagename, unitTestResult.getCoverageResultUri(), listener);
+
+							HttpResponse coverageResponse = coveragePostHandler.executeWithToken();
+							String coverageResponseContent = EntityUtils.toString(coverageResponse.getEntity(),
+									"UTF-8");
+							CoverageResult coverageResult = new CoverageResultParser().parse(coverageResponseContent);
+							logger.println("~~~~ Coverage results ~~~~");
+							logger.println("Statement coverage: "
+									+ String.format("%.2f", coverageResult.getStatementCoverage()) + "%");
+							logger.println("Branch coverage: "
+									+ String.format("%.2f", coverageResult.getBranchCoverage()) + "%");
+							logger.println("Procedure coverage: "
+									+ String.format("%.2f", coverageResult.getProcedureCoverage()) + "%");
+							// logger.println("Response status code of coverage results: "
+							// + coverageResponse.getStatusLine().getStatusCode());
+						} else {
+							logger.println("Coverage results not found in the response...");
+						}
+					}
 				}
 			}
 

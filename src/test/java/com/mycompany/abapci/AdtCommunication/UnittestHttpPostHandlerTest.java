@@ -23,7 +23,11 @@
  */
 package com.mycompany.abapci.AdtCommunication;
 
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.IOException;
+
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -34,14 +38,24 @@ import org.junit.Test;
 public class UnittestHttpPostHandlerTest {
 
 	@Test
-	public void SimpleTest() throws IOException {
-
+	public void postMessageWithoutCoverage() throws IOException {
 		SapConnectionInfo sapConnectionInfo = null;
 		UnittestHttpPostHandler httpPostHandler = new UnittestHttpPostHandler(sapConnectionInfo, "SAP_TEST_PACKAGE",
-				null);
+				false, null);
+		String postMessage = httpPostHandler.GetPostMessage();
+		assertNotNull(postMessage);
+		assertTrue(postMessage.contains("/sap/bc/adt/vit/wb/object_type/devck/object_name/SAP_TEST_PACKAGE"));
+		assertTrue(postMessage.contains("coverage active=\"false\""));
+	}
+	
+	@Test
+	public void postMessageWithCoverage() throws IOException {
+		SapConnectionInfo sapConnectionInfo = null;
+		UnittestHttpPostHandler httpPostHandler = new UnittestHttpPostHandler(sapConnectionInfo, "SAP_TEST_PACKAGE",
+				true, null);
 		String postMessage = httpPostHandler.GetPostMessage();
 		Assert.assertNotNull(postMessage);
 		Assert.assertTrue(postMessage.contains("/sap/bc/adt/vit/wb/object_type/devck/object_name/SAP_TEST_PACKAGE"));
-
+		assertTrue(postMessage.contains("coverage active=\"true\""));
 	}
 }

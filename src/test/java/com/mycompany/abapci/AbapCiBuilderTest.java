@@ -13,7 +13,7 @@ import org.jvnet.hudson.test.JenkinsRule;
 public class AbapCiBuilderTest {
 	
 	//TODO
-	//sapSystemLabel is coming from select
+	//sapSystemLabel is coming from select field
 	//and gets "" when used here
 
 	@Rule

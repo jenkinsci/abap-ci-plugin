@@ -38,8 +38,9 @@ import org.json.XML;
  */
 public class UnittestResultParser {
 
-	public UnitTestCheckResult parseXmlForFailedElements(String xml) throws IOException {
+	public UnitTestCheckResult parseUnitTestResult(String xml) throws IOException {
 		int numFailedUnittests = 0;
+		String coverageResultUri = null;
 		List<String> messages = new ArrayList<String>();
 		UnitTestCheckResult result = new UnitTestCheckResult();
 
@@ -108,7 +109,20 @@ public class UnittestResultParser {
 
 		}
 
+		if (aUnitJsonObject.has("external")) {
+			JSONObject externalJsonObject = aUnitJsonObject.optJSONObject("external");
+
+			if (externalJsonObject != null && !externalJsonObject.isEmpty()) {
+				JSONObject coverageJsonObject = externalJsonObject.optJSONObject("coverage");
+
+				if (coverageJsonObject != null && !coverageJsonObject.isEmpty()) {
+					coverageResultUri = coverageJsonObject.getString("adtcore:uri");
+				}
+			}
+		}
+
 		result.setNumOfFailedTests(numFailedUnittests);
+		result.setCoverageResultUri(coverageResultUri);
 		result.appendMessages(messages);
 		return result;
 	}

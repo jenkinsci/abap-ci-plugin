@@ -7,6 +7,7 @@ import java.util.List;
 public class UnitTestCheckResult {
 	private int numberOfFailedTests;
 	private String sapSystemName;
+	private String coverageResultUri;
 	private List<String> messages = new ArrayList<String>();
 
 	public void setNumOfFailedTests(int numOfFailedTests) {
@@ -39,5 +40,21 @@ public class UnitTestCheckResult {
 
 	public boolean isFailed() {
 		return numberOfFailedTests > 0;
+	}
+
+	public String getCoverageResultUri() {
+		return coverageResultUri;
+	}
+
+	public void setCoverageResultUri(String coverageResultUri) {
+		this.coverageResultUri = coverageResultUri;
+	}
+	
+	public boolean hasCoverageResult() {
+		if(this.coverageResultUri != null && this.coverageResultUri.length() > 0) {
+			return true;
+		}
+		
+		return false;
 	}
 }
